@@ -1,11 +1,28 @@
 <template>
   <div>
-    <h2>主分類：{{ main }}</h2>
-    <h3>子分類：{{ sub }}</h3>
-    <p>這裡可以載入 {{ main }}/{{ sub }} 對應的資料或內容</p>
+    <h2>目前分類路徑：</h2>
+    <p>/category/{{ paths.join('/') }}</p>
+    {{ $route.params }}
   </div>
 </template>
 
 <script setup>
-defineProps(['main', 'sub'])
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+
+// const props = defineProps({
+//   paths: {
+//     type: Array,
+//     default: () => [],
+//   },
+// })
+
+const route = useRoute()
+const paths = computed(() => {
+  const p = route.params.paths
+  if (Array.isArray(p)) return p
+  if (typeof p === 'string') return p ? [p] : []
+  return []
+})
+console.log('🚀 ~ paths ~ paths:', paths.value)
 </script>

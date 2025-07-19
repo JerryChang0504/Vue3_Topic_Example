@@ -18,24 +18,39 @@ import DeleteButton from './components/DeleteButton.vue'
 import ProvideInjectRef from './components/ProvideInjectRef.vue'
 import useFormat from '@/composables/useFormat'
 import WatchDeepAndMutiValues from './components/WatchDeepAndMutiValues.vue'
-import CategorySidebar from './Navigation/CategorySidebar.vue'
-import TopBar from './Navigation/TopBar.vue'
-import Breadcrumb from './Navigation/Breadcrumb.vue'
+import CategorySidebar from './navigation/CategorySidebar.vue'
+import TopBar from './navigation/TopBar.vue'
+import Breadcrumb from './navigation/Breadcrumb.vue'
+import { Monitor, Cpu, Coffee, Suitcase, Flag } from '@element-plus/icons-vue'
+
 const categories = [
   {
     name: 'tech',
     label: '技術類',
+    icon: Monitor,
+    clickable: false,
     subs: [
-      { name: 'frontend', label: '前端' },
-      { name: 'backend', label: '後端' },
+      { name: 'frontend', label: '前端', icon: Cpu },
+      { name: 'backend', label: '後端', icon: Cpu },
     ],
   },
   {
     name: 'life',
     label: '生活類',
+    icon: Coffee,
+    clickable: false,
     subs: [
-      { name: 'food', label: '美食' },
-      { name: 'travel', label: '旅遊' },
+      { name: 'food', label: '美食', icon: Coffee },
+      {
+        name: 'travel',
+        label: '旅遊',
+        icon: Suitcase,
+        clickable: false,
+        subs: [
+          { name: 'usa', label: '美國', icon: Flag },
+          { name: 'canada', label: '加拿大', icon: Flag },
+        ],
+      },
     ],
   },
 ]

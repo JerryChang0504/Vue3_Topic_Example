@@ -1,14 +1,15 @@
 import { createWebHistory, createRouter } from 'vue-router'
 import About from '@/views/About.vue'
 import UserPost from '@/views/UserPost.vue'
-import CategoryPage from '@/Navigation/sub/CategoryPage.vue'
+import CategoryPage from '@/navigation/sub/CategoryPage.vue'
 const routes = [
   { path: '/', component: () => import('@/views/Home.vue') },
   { path: '/login', component: () => import('@/views/Login.vue') },
+  { path: '/register', component: () => import('@/views/Register.vue') },
   { path: '/about', component: About },
   { path: '/users/:username/posts/:postId', component: UserPost },
   {
-    path: '/category/:main/:sub',
+    path: '/category/:paths(.*)*',
     name: 'Category',
     component: CategoryPage,
     props: true,
