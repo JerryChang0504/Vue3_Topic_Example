@@ -22,6 +22,7 @@ import CategorySidebar from './navigation/CategorySidebar.vue'
 import TopBar from './navigation/TopBar.vue'
 import Breadcrumb from './navigation/Breadcrumb.vue'
 import { Monitor, Cpu, Coffee, Suitcase, Flag } from '@element-plus/icons-vue'
+document.title = import.meta.env.VITE_APP_TITLE
 
 const categories = [
   {
