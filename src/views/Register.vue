@@ -110,6 +110,7 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
+import api from '@/service/api'
 
 const router = useRouter()
 
@@ -230,29 +231,38 @@ const handleRegister = async () => {
 // 模擬註冊API
 const simulateRegister = () => {
   return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      // 模擬檢查帳號是否已存在
-      if (form.value.username === 'admin') {
-        reject(new Error('此帳號已被使用，請選擇其他帳號'))
-        return
-      }
-
-      if (form.value.email === 'admin@example.com') {
-        reject(new Error('此Email已被註冊，請使用其他Email'))
-        return
-      }
-
-      // 模擬成功註冊
-      console.log('註冊資料:', {
+    api
+      .register({
         username: form.value.username,
         email: form.value.email,
+        password: form.value.password,
         fullName: form.value.fullName,
         phone: form.value.phone,
       })
-
-      resolve()
-    }, 1500)
+      .then((res) => {
+        resolve(res.data)
+      })
   })
+  // setTimeout(() => {
+  //   // 模擬檢查帳號是否已存在
+  //   if (form.value.username === 'admin') {
+  //     reject(new Error('此帳號已被使用，請選擇其他帳號'))
+  //     return
+  //   }
+  //   if (form.value.email === 'admin@example.com') {
+  //     reject(new Error('此Email已被註冊，請使用其他Email'))
+  //     return
+  //   }
+  //   // 模擬成功註冊
+  //   console.log('註冊資料:', {
+  //     username: form.value.username,
+  //     email: form.value.email,
+  //     fullName: form.value.fullName,
+  //     phone: form.value.phone,
+  //   })
+  //   resolve()
+  // }, 1500)
+  // })
 }
 
 const showTerms = () => {

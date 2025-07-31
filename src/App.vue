@@ -22,7 +22,19 @@ import CategorySidebar from './navigation/CategorySidebar.vue'
 import TopBar from './navigation/TopBar.vue'
 import Breadcrumb from './navigation/Breadcrumb.vue'
 import { Monitor, Cpu, Coffee, Suitcase, Flag } from '@element-plus/icons-vue'
+import api from './service/api'
+
+import { onMounted } from 'vue'
 document.title = import.meta.env.VITE_APP_TITLE
+const getusers = async () => {
+  const res = await api.user()
+  console.log('🚀 ~ res:', res?.result)
+  return res
+}
+
+onMounted(() => {
+  getusers()
+})
 
 const categories = [
   {

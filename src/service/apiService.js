@@ -1,17 +1,21 @@
-// src/services/apiService.js
 import axios from 'axios'
+import { showLoading, hideLoading } from '@/utils/loadingService'
+import { isWhiteListed } from './authWhitelist'
 
 const apiService = axios.create({
-  baseURL: 'https://api.example.com',
-  timeout: 10000,
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  timeout: 600000, // 10 分鐘
 })
 
 // 請求攔截器：自動加上 Token
 apiService.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token')
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
+    showLoading() // 開啟 loading
+    if (!isWhiteListed(config.url, config.baseURL)) {
+      const token = localStorage.getItem('token')
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`
+      }
     }
     return config
   },
@@ -20,8 +24,13 @@ apiService.interceptors.request.use(
 
 // 回應攔截器：統一錯誤處理（可擴充）
 apiService.interceptors.response.use(
-  (response) => response,
+  async (response) => {
+    await new Promise((resolve) => setTimeout(resolve, 1000)) // 模擬 2 秒延遲
+    hideLoading() // 成功後關閉 loading
+    return response.data // 所有 .then 接收到的是 res.data
+  },
   (error) => {
+    hideLoading() // 成功後關閉 loading
     // 可自訂錯誤訊息處理
     if (error.response?.status === 401) {
       console.warn('未授權，請重新登入')

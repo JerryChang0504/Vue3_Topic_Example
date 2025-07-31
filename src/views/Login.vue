@@ -43,15 +43,18 @@
 import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
+import api from '@/service/api'
+import { useUserStore } from '@/store/UserStore'
 
 const router = useRouter()
 
 const loginForm = ref()
 const loading = ref(false)
+const userStore = useUserStore()
 
 const form = ref({
-  username: '',
-  password: '',
+  username: 'john_doe',
+  password: 'P@ssw0rd123',
   rememberMe: false,
 })
 
@@ -85,23 +88,24 @@ const handleLogin = async () => {
 
     loading.value = true
 
-    // 模擬登入API調用
-    await simulateLogin()
-
-    // 處理記住我功能
-    if (form.value.rememberMe) {
-      localStorage.setItem('rememberedUsername', form.value.username)
-    } else {
-      localStorage.removeItem('rememberedUsername')
-    }
-
-    // 儲存登入狀態（建議使用JWT token）
     const loginData = {
-      isLogin: true,
       username: form.value.username,
-      loginTime: new Date().getTime(),
+      password: form.value.password,
+      rememberMe: form.value.rememberMe,
+      isLogin: true,
     }
-    localStorage.setItem('loginData', JSON.stringify(loginData))
+
+    const res = await api.login(loginData)
+    console.log('🚀 ~ handleLogin ~ res:', res)
+
+    // .then((res) => {
+    //   console.log('🚀 ~ handleLogin ~ res:', res)
+    userStore.login(loginData)
+    localStorage.setItem('token', res.result)
+    // })
+    // .catch((error) => {
+    //   ElMessage.error(error.message || '登入失敗，請稍後再試')
+    // })
 
     ElMessage.success('登入成功！')
     router.push('/') // 登入後導回首頁
@@ -110,23 +114,6 @@ const handleLogin = async () => {
   } finally {
     loading.value = false
   }
-}
-
-// 模擬登入API
-const simulateLogin = () => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      // 模擬登入驗證
-      if (form.value.username === 'admin' && form.value.password === '123456') {
-        resolve()
-      } else if (form.value.username && form.value.password) {
-        // 模擬成功登入（實際應該調用API）
-        resolve()
-      } else {
-        reject(new Error('帳號或密碼錯誤'))
-      }
-    }, 1000)
-  })
 }
 
 const handleForgotPassword = () => {
