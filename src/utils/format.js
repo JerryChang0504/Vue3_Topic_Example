@@ -38,4 +38,19 @@ function formatDate(date, style) {
   }
 }
 
-export { formatPrice, formatDate }
+/**
+ * 秒數轉換為時分秒
+ *
+ * @param {*} totalSeconds 秒數
+ * @returns 時分秒
+ * @example
+ * formatSecondsToHHMMSS(3600) // 01:00:00
+ */
+function formatSecondsToHHMMSS(totalSeconds) {
+  const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0')
+  const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0')
+  const seconds = String(totalSeconds % 60).padStart(2, '0')
+  return `${hours}:${minutes}:${seconds}`
+}
+
+export { formatPrice, formatDate, formatSecondsToHHMMSS }

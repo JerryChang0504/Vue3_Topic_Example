@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { showLoading, hideLoading } from '@/utils/loadingService'
 import { isWhiteListed } from './authWhitelist'
+import { ElMessage } from 'element-plus'
 
 const apiService = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -27,11 +28,20 @@ apiService.interceptors.response.use(
   async (response) => {
     await new Promise((resolve) => setTimeout(resolve, 1000)) // 模擬 2 秒延遲
     hideLoading() // 成功後關閉 loading
-    return response.data // 所有 .then 接收到的是 res.data
+    const res = response.data // 所有 .then 接收到的是 res.data
+
+    // ❗檢查 code 是否為成功代碼
+    if (res.code && res.code !== '0000') {
+      ElMessage.error(res.msg || '發生錯誤')
+      return Promise.reject(res) // 中止回傳
+    }
+
+    return res
   },
   (error) => {
     hideLoading() // 成功後關閉 loading
-    // 可自訂錯誤訊息處理
+    localStorage.removeItem('token') // 清除 token
+    //     // 可自訂錯誤訊息處理
     if (error.response?.status === 401) {
       console.warn('未授權，請重新登入')
     }

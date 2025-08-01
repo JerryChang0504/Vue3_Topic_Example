@@ -25,7 +25,7 @@ import { Monitor, Cpu, Coffee, Suitcase, Flag } from '@element-plus/icons-vue'
 import api from './service/api'
 
 import { onMounted } from 'vue'
-document.title = import.meta.env.VITE_APP_TITLE
+
 const getusers = async () => {
   const res = await api.user()
   console.log('🚀 ~ res:', res?.result)
@@ -79,12 +79,6 @@ const categories = [
   </header>
 
   <main>
-    <!-- <h1>我的網站</h1>
-    <nav>
-      <router-link to="/">首頁</router-link> | <router-link to="/about">關於</router-link>|
-      <router-link to="/users/eduardo/posts/1">router</router-link>|
-      <router-link to="/users/eduardo/posts/20">/users/eduardo/posts/20</router-link>
-    </nav> -->
     <div class="layout">
       <CategorySidebar :categories="categories" />
 
@@ -133,34 +127,6 @@ const categories = [
   </main>
 </template>
 
-<style scoped>
-/* header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-} */
-</style>
 <style scoped>
 .layout {
   display: flex;

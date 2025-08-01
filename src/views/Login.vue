@@ -25,9 +25,7 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="handleLogin" :loading="loading" style="width: 100%">
-            登入
-          </el-button>
+          <el-button type="primary" @click="handleLogin" style="width: 100%"> 登入 </el-button>
         </el-form-item>
 
         <div class="login-links">
@@ -42,14 +40,13 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
-import { useRouter } from 'vue-router'
 import api from '@/service/api'
 import { useUserStore } from '@/store/UserStore'
+import { useNavigation } from '@/composables/useNavigation'
 
-const router = useRouter()
+const { goTo, goHome } = useNavigation()
 
 const loginForm = ref()
-const loading = ref(false)
 const userStore = useUserStore()
 
 const form = ref({
@@ -82,38 +79,23 @@ onMounted(() => {
 const handleLogin = async () => {
   if (!loginForm.value) return
 
-  try {
-    const valid = await loginForm.value.validate()
-    if (!valid) return
+  const valid = await loginForm.value.validate()
+  if (!valid) return
 
-    loading.value = true
-
-    const loginData = {
-      username: form.value.username,
-      password: form.value.password,
-      rememberMe: form.value.rememberMe,
-      isLogin: true,
-    }
-
-    const res = await api.login(loginData)
-    console.log('🚀 ~ handleLogin ~ res:', res)
-
-    // .then((res) => {
-    //   console.log('🚀 ~ handleLogin ~ res:', res)
-    userStore.login(loginData)
-    localStorage.setItem('token', res.result)
-    // })
-    // .catch((error) => {
-    //   ElMessage.error(error.message || '登入失敗，請稍後再試')
-    // })
-
-    ElMessage.success('登入成功！')
-    router.push('/') // 登入後導回首頁
-  } catch (error) {
-    ElMessage.error(error.message || '登入失敗，請稍後再試')
-  } finally {
-    loading.value = false
+  const loginData = {
+    username: form.value.username,
+    password: form.value.password,
+    rememberMe: form.value.rememberMe,
+    isLogin: true,
   }
+
+  const res = await api.login(loginData)
+  const token = res.result
+  userStore.login(loginData)
+  userStore.startTokenCountdown(token)
+
+  ElMessage.success('登入成功！')
+  goHome()
 }
 
 const handleForgotPassword = () => {
@@ -122,8 +104,7 @@ const handleForgotPassword = () => {
 }
 
 const handleRegister = () => {
-  // ElMessage.info('註冊功能開發中...')
-  router.push('/register')
+  goTo('Register')
 }
 </script>
 

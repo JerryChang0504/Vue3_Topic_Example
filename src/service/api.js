@@ -6,7 +6,12 @@ const api = {
   // 註冊
   register: (data) => apiService.post(API_ROUTES.REGISTER, data),
   // 登入
-  login: (data) => apiService.post(API_ROUTES.LOGIN, data),
+  login: async (data) => {
+    const res = await apiService.post(API_ROUTES.LOGIN, data)
+    console.log('🚀 ~ res:', res)
+    localStorage.setItem('token', res.result)
+    return res
+  },
   // 用戶資料
   user: () => apiService.get(API_ROUTES.USER),
   // 查詢個人資料

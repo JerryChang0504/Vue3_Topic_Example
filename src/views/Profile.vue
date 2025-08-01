@@ -21,9 +21,7 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="handleUpdate" :loading="loading" style="width: 100%">
-            更新資料
-          </el-button>
+          <el-button type="primary" @click="handleUpdate" style="width: 100%"> 更新資料 </el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -34,13 +32,11 @@
 import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import api from '@/service/api'
-import { useUserStore } from '@/store/UserStore'
 import { useRouter } from 'vue-router'
+import { useNavigation } from '@/composables/useNavigation'
 
+const { goLogin } = useNavigation()
 const profileForm = ref()
-const loading = ref(false)
-const userStore = useUserStore()
-const router = useRouter()
 
 const form = ref({
   username: '',
@@ -50,15 +46,15 @@ const form = ref({
 })
 
 onMounted(async () => {
-  if (!userStore.user.isLogin) {
+  const token = localStorage.getItem('token')
+
+  if (!token) {
     ElMessage.error('請先登入')
-    // router.push('/login')
+    goLogin
     return
   }
-  const token = localStorage.getItem('token')
   if (token) {
     const res = await api.findUser()
-    console.log('🚀 ~ res:', res)
     form.value = { ...form.value, ...res.result }
   }
 })
@@ -99,13 +95,10 @@ const handleUpdate = async () => {
     const valid = await profileForm.value.validate()
     if (!valid) return
 
-    loading.value = true
     await api.updateProfile({ ...form.value })
     ElMessage.success('資料更新成功！')
   } catch (err) {
     ElMessage.error(err.message || '更新失敗，請稍後再試')
-  } finally {
-    loading.value = false
   }
 }
 </script>

@@ -3,11 +3,16 @@ import About from '@/views/About.vue'
 import UserPost from '@/views/UserPost.vue'
 import CategoryPage from '@/navigation/sub/CategoryPage.vue'
 const routes = [
-  { path: '/', component: () => import('@/views/Home.vue') },
-  { path: '/login', component: () => import('@/views/Login.vue') },
-  { path: '/register', component: () => import('@/views/Register.vue') },
-  { path: '/profile', component: () => import('@/views/Profile.vue') },
-  { path: '/about', component: About },
+  { path: '/', name: 'Home', component: () => import('@/views/Home.vue') },
+  { path: '/login', name: 'Login', component: () => import('@/views/Login.vue') },
+  { path: '/register', name: 'Register', component: () => import('@/views/Register.vue') },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: () => import('@/views/Profile.vue'),
+    meta: { requiresAuth: true },
+  },
+  { path: '/about', name: 'About', component: About },
   { path: '/users/:username/posts/:postId', component: UserPost },
   {
     path: '/category/:paths(.*)*',
@@ -21,5 +26,14 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 })
+// ✅ 加入全域導航守衛：權限驗證
+router.beforeEach((to, from, next) => {
+  const isLoggedIn = !!localStorage.getItem('token')
 
+  if (to.meta.requiresAuth && !isLoggedIn) {
+    return next('/login')
+  }
+
+  next()
+})
 export default router

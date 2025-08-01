@@ -46,6 +46,12 @@ const props = defineProps({
   },
 })
 
+/**
+ * 這個方法用來建立菜單樹的結構
+ *
+ * @param {Array} items - 菜單項目的陣列
+ * @param {string} parentPath - 父菜單項目的路徑
+ */
 const buildMenuTree = (items, parentPath = '') => {
   return items.map((item) => {
     const path = parentPath ? `${parentPath}/${item.name}` : item.name
@@ -70,6 +76,11 @@ const active = computed(() => {
   return ''
 })
 
+/**
+ * 這個方法用來收集所有開啟的子項目
+ *
+ * @param items - 菜單項目的陣列
+ */
 const collectOpenKeys = (items) => {
   let keys = []
   items.forEach((item) => {
@@ -85,11 +96,6 @@ const isCollapsed = ref(false)
 const toggleCollapse = () => {
   isCollapsed.value = !isCollapsed.value
 }
-
-// const openKeys = computed(() =>
-//   props.defaultOpenAll ? collectOpenKeys(categoriesWithPaths.value) : [],
-// )
-// console.log('🚀 ~ active ~ active:', active.value)
 </script>
 <style scoped>
 .sidebar-wrapper {

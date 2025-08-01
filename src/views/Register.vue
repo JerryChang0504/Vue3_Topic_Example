@@ -59,7 +59,7 @@
 
         <div class="register-links">
           <span>已有帳號？</span>
-          <el-link type="primary" @click="goToLogin">立即登入</el-link>
+          <el-link type="primary" @click="login">立即登入</el-link>
         </div>
       </el-form>
     </el-card>
@@ -111,9 +111,9 @@ import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
 import api from '@/service/api'
+import { useNavigation } from '@/composables/useNavigation'
 
-const router = useRouter()
-
+const { goLogin } = useNavigation()
 const registerForm = ref()
 const loading = ref(false)
 const termsVisible = ref(false)
@@ -215,54 +215,23 @@ const handleRegister = async () => {
     loading.value = true
 
     // 模擬註冊API調用
-    await simulateRegister()
+    await api.register({
+      username: form.value.username,
+      email: form.value.email,
+      password: form.value.password,
+      fullName: form.value.fullName,
+      phone: form.value.phone,
+    })
 
     ElMessage.success('註冊成功！請登入您的帳號')
 
     // 註冊成功後跳轉到登入頁面
-    router.push('/login')
+    goLogin()
   } catch (error) {
     ElMessage.error(error.message || '註冊失敗，請稍後再試')
   } finally {
     loading.value = false
   }
-}
-
-// 模擬註冊API
-const simulateRegister = () => {
-  return new Promise((resolve, reject) => {
-    api
-      .register({
-        username: form.value.username,
-        email: form.value.email,
-        password: form.value.password,
-        fullName: form.value.fullName,
-        phone: form.value.phone,
-      })
-      .then((res) => {
-        resolve(res.data)
-      })
-  })
-  // setTimeout(() => {
-  //   // 模擬檢查帳號是否已存在
-  //   if (form.value.username === 'admin') {
-  //     reject(new Error('此帳號已被使用，請選擇其他帳號'))
-  //     return
-  //   }
-  //   if (form.value.email === 'admin@example.com') {
-  //     reject(new Error('此Email已被註冊，請使用其他Email'))
-  //     return
-  //   }
-  //   // 模擬成功註冊
-  //   console.log('註冊資料:', {
-  //     username: form.value.username,
-  //     email: form.value.email,
-  //     fullName: form.value.fullName,
-  //     phone: form.value.phone,
-  //   })
-  //   resolve()
-  // }, 1500)
-  // })
 }
 
 const showTerms = () => {
@@ -273,8 +242,8 @@ const showPrivacy = () => {
   privacyVisible.value = true
 }
 
-const goToLogin = () => {
-  router.push('/login')
+const login = () => {
+  goLogin()
 }
 </script>
 
