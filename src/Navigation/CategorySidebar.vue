@@ -5,7 +5,7 @@
       :default-active="active"
       router
       :collapse="isCollapsed"
-      :unique-opened="true"
+      :unique-opened="false"
       :collapse-transition="false"
     >
       <MenuItem
@@ -38,7 +38,7 @@ const props = defineProps({
   },
   basePath: {
     type: String,
-    default: '/category',
+    default: '',
   },
   defaultOpenAll: {
     type: Boolean,

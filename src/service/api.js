@@ -1,6 +1,5 @@
 import apiService from './apiService'
 import { API_ROUTES } from './apiRoutes'
-import { find } from 'lodash'
 
 const api = {
   // 註冊
@@ -8,7 +7,6 @@ const api = {
   // 登入
   login: async (data) => {
     const res = await apiService.post(API_ROUTES.LOGIN, data)
-    console.log('🚀 ~ res:', res)
     localStorage.setItem('token', res.result)
     return res
   },
@@ -20,6 +18,16 @@ const api = {
   updateProfile: (data) => apiService.put(API_ROUTES.PROFILE, data),
   // 登出
   logout: () => apiService.post(API_ROUTES.LOGOUT),
+  // 新增產品
+  addProduct: (data) => apiService.post(API_ROUTES.PRODUCT_ADD, data),
+
+  // 取得產品列表
+  getProducts: () => apiService.get(API_ROUTES.PRODUCT_LIST),
+
+  // 取得產品詳細資料
+  getProductById: (id) => apiService.get(API_ROUTES.PRODUCT_DETAIL(id)),
+  // 更新產品資料
+  updateProduct: (id, data) => apiService.put(API_ROUTES.PRODUCT_UPDATE(id), data),
 }
 
 export default api

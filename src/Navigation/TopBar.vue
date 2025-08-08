@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import TopBarAdBanner from '@/views/TopBarAdBanner.vue'
+import TopBarAdBanner from '@/navigation/TopBarAdBanner.vue'
 import LoginMenu from './LoginMenu.vue'
 defineProps({ bannerOn: { type: Boolean, default: false } })
 </script>

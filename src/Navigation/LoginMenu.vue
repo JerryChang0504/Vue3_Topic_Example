@@ -32,7 +32,7 @@
 <script setup>
 import { computed } from 'vue'
 import { More } from '@element-plus/icons-vue'
-import { useUserStore } from '@/store/UserStore'
+import { useUserStore } from '@/store/userStore'
 import { storeToRefs } from 'pinia'
 import { useNavigation } from '@/composables/useNavigation'
 

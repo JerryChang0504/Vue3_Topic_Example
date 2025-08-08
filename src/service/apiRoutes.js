@@ -5,4 +5,8 @@ export const API_ROUTES = {
   FINDUSER: '/api/finduser',
   PROFILE: '/api/profile',
   LOGOUT: '/api/logout',
+  PRODUCT_ADD: '/api/addProducts',
+  PRODUCT_LIST: '/api/products',
+  PRODUCT_DETAIL: (id) => `/api/products/edit/${id}`,
+  PRODUCT_UPDATE: (id) => `/api/updateProducts/${id}`,
 }

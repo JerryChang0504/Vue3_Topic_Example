@@ -41,7 +41,7 @@
 import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import api from '@/service/api'
-import { useUserStore } from '@/store/UserStore'
+import { useUserStore } from '@/store/userStore'
 import { useNavigation } from '@/composables/useNavigation'
 
 const { goTo, goHome } = useNavigation()
