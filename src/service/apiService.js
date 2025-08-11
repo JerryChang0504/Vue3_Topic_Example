@@ -2,6 +2,9 @@ import axios from 'axios'
 import { showLoading, hideLoading } from '@/utils/loadingService'
 import { isWhiteListed } from './authWhitelist'
 import { ElMessage } from 'element-plus'
+import { useNavigation } from '@/composables/useNavigation'
+
+const { goLogin } = useNavigation()
 
 const apiService = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -41,9 +44,12 @@ apiService.interceptors.response.use(
   (error) => {
     hideLoading() // 成功後關閉 loading
     localStorage.removeItem('token') // 清除 token
-    //     // 可自訂錯誤訊息處理
+    // 可自訂錯誤訊息處理
     if (error.response?.status === 401) {
-      console.warn('未授權，請重新登入')
+      ElMessage.error('登入已過期，請重新登入')
+      goLogin()
+    } else {
+      ElMessage.error('網路錯誤，請稍後再試')
     }
     return Promise.reject(error)
   },

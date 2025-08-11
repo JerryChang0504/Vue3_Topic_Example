@@ -1,8 +1,8 @@
 <script setup>
+import { Coffee, Cpu, Flag, Monitor, Suitcase } from '@element-plus/icons-vue'
+import Breadcrumb from './navigation/Breadcrumb.vue'
 import CategorySidebar from './navigation/CategorySidebar.vue'
 import TopBar from './navigation/TopBar.vue'
-import Breadcrumb from './navigation/Breadcrumb.vue'
-import { Monitor, Cpu, Coffee, Suitcase, Flag } from '@element-plus/icons-vue'
 import api from './service/api'
 
 import { onMounted } from 'vue'
@@ -25,7 +25,7 @@ const categories = [
     clickable: false,
     subs: [
       { name: '', label: '商品介紹', icon: Cpu },
-      { name: 'add', label: '商品新增', icon: Cpu },
+      { name: 'list', label: '商品管理', icon: Cpu },
     ],
   },
   {

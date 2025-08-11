@@ -19,6 +19,10 @@
         <el-input-number v-model="form.price" :min="0" :step="100" />
       </el-form-item>
 
+      <el-form-item label="庫存數量" prop="stock">
+        <el-input-number v-model="form.stock" :min="0" :step="1" placeholder="請輸入庫存數量" />
+      </el-form-item>
+
       <el-form-item label="描述">
         <el-input
           v-model="form.description"
@@ -32,7 +36,7 @@
         <input type="file" accept="image/*" @change="handleFileChange" />
         <div v-if="imagePreview" class="mt-2">
           <img :src="imagePreview" class="h-32 rounded border" />
-          <el-button type="text" @click="removeImage" style="padding: 0">刪除圖片</el-button>
+          <el-button type="danger" @click="removeImage" text>刪除圖片</el-button>
         </div>
       </el-form-item>
 
@@ -41,30 +45,46 @@
         <el-button @click="resetForm" type="default">重設</el-button>
       </el-form-item>
     </el-form>
+
+    <ConfirmationDialog
+      v-model="successDialogVisible"
+      title="新增成功"
+      message="商品已成功新增。請問您要繼續新增商品嗎？"
+      :buttons="successButtons"
+    />
   </div>
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
-import axios from 'axios'
-import { ElMessage } from 'element-plus'
+import ConfirmationDialog from '@/components/ConfirmationDialog.vue' // 引入通用元件
+import { useNavigation } from '@/composables/useNavigation'
 import api from '@/service/api'
+import { ElMessage } from 'element-plus'
+import { reactive, ref } from 'vue'
+
 const formRef = ref()
+const { goTo } = useNavigation()
+const successDialogVisible = ref(false)
+const imagePreview = ref(null)
 
 const form = reactive({
-  name: '',
-  category: '',
-  price: 1000,
-  description: '',
-  imageBase64: '', // 改成 Base64 字串
+  name: '', //產品名稱
+  category: '', //分類
+  price: 1000, //價格
+  stock: 0, //庫存
+  description: '', //描述
+  imageBase64: '', //圖片
+  imageType: '', //圖片類型
 })
-
-const imagePreview = ref(null)
 
 const rules = {
   name: [{ required: true, message: '請輸入商品名稱', trigger: 'blur' }],
   category: [{ required: true, message: '請選擇分類', trigger: 'change' }],
   price: [{ required: true, message: '請輸入價格', trigger: 'blur' }],
+  stock: [
+    { required: true, message: '請輸入庫存數量', trigger: 'blur' },
+    { type: 'number', min: 0, message: '庫存數量不能為負數', trigger: 'blur' },
+  ],
   imageBase64: [{ required: true, message: '請上傳圖片', trigger: 'change' }],
 }
 
@@ -132,11 +152,25 @@ function resetForm() {
   form.name = ''
   form.category = ''
   form.price = null
+  form.stock = 0
   form.description = ''
   form.imageBase64 = ''
   imagePreview.value = null
   formRef.value.resetFields()
 }
+// 根據需求定義「新增成功」對話框的按鈕
+const successButtons = [
+  {
+    text: '返回列表',
+    type: 'default',
+    onClick: () => goTo('ProductList'),
+  },
+  {
+    text: '繼續新增',
+    type: 'primary',
+    onClick: () => resetForm(),
+  },
+]
 
 function submitForm() {
   formRef.value.validate(async (valid) => {
@@ -145,9 +179,9 @@ function submitForm() {
     try {
       await api.addProduct(form)
       ElMessage.success('商品新增成功！')
-      resetForm()
+      // 成功後，呼叫獨立出來的處理函數
+      successDialogVisible.value = true
     } catch (error) {
-      console.error(error)
       ElMessage.error('新增失敗，請稍後再試')
     }
     document.querySelector('input[type="file"]').value = ''

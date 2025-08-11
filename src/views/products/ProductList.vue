@@ -58,14 +58,6 @@
             <el-button type="primary" size="small" class="w-full" @click="addToCart(product)">
               加入購物車
             </el-button>
-            <el-button
-              type="primary"
-              size="small"
-              class="w-full mt-2"
-              @click="editProduct(product.id)"
-            >
-              編輯商品
-            </el-button>
           </div>
         </el-card>
       </el-col>
@@ -101,12 +93,12 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import api from '@/service/api'
-import { useNavigation } from '@/composables/useNavigation'
-import { ElMessage } from 'element-plus'
 import CartDrawer from '@/components/CartDrawer.vue'
+import { useNavigation } from '@/composables/useNavigation'
+import api from '@/service/api'
 import { useCartStore } from '@/store/carStore'
+import { ElMessage } from 'element-plus'
+import { computed, onMounted, ref } from 'vue'
 
 const { goTo } = useNavigation()
 const cartStore = useCartStore()
@@ -163,11 +155,6 @@ const addToCart = (product) => {
 const removeItem = (productId) => {
   cartStore.removeProduct(productId)
   ElMessage.success('商品已從購物車移除')
-}
-
-// 編輯商品
-const editProduct = (productId) => {
-  goTo('EditProduct', { id: productId })
 }
 
 onMounted(async () => {

@@ -9,4 +9,5 @@ export const API_ROUTES = {
   PRODUCT_LIST: '/api/products',
   PRODUCT_DETAIL: (id) => `/api/products/edit/${id}`,
   PRODUCT_UPDATE: (id) => `/api/updateProducts/${id}`,
+  PRODUCT_MANAGE_LIST: `/api/products/list`,
 }
