@@ -13,9 +13,15 @@
           <el-option label="服飾配件" value="服飾配件" />
         </el-select>
       </el-form-item>
+
       <el-form-item label="價格" prop="price">
         <el-input-number v-model="form.price" :min="0" :step="100" />
       </el-form-item>
+
+      <el-form-item label="庫存數量" prop="stock">
+        <el-input-number v-model="form.stock" :min="0" :step="1" placeholder="請輸入庫存數量" />
+      </el-form-item>
+
       <el-form-item label="描述">
         <el-input
           v-model="form.description"
@@ -28,7 +34,7 @@
         <input type="file" accept="image/*" @change="handleFileChange" />
         <div v-if="imagePreview" class="mt-2">
           <img :src="imagePreview" class="h-32 rounded border" />
-          <el-button type="text" @click="removeImage" style="padding: 0">刪除圖片</el-button>
+          <el-button type="danger" @click="removeImage" text>刪除圖片</el-button>
         </div>
       </el-form-item>
 
@@ -42,11 +48,11 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
-import api from '@/service/api'
-import { useRoute } from 'vue-router'
 import { useNavigation } from '@/composables/useNavigation'
+import api from '@/service/api'
+import { ElMessage } from 'element-plus'
+import { onMounted, reactive, ref } from 'vue'
+import { useRoute } from 'vue-router'
 const productId = ref(null) // 新增一個 ref 來儲存 id
 
 const route = useRoute()
@@ -56,6 +62,7 @@ const form = reactive({
   name: '',
   category: '',
   price: 0,
+  stock: 0,
   description: '',
   imageBase64: '', // 改成 Base64 字串
 })
@@ -66,6 +73,11 @@ const rules = {
   name: [{ required: true, message: '請輸入商品名稱', trigger: 'blur' }],
   category: [{ required: true, message: '請選擇分類', trigger: 'change' }],
   price: [{ required: true, message: '請輸入價格', trigger: 'blur' }],
+  stock: [
+    { required: true, message: '請輸入庫存數量', trigger: 'blur' },
+    { type: 'number', min: 0, message: '庫存數量不能為負數', trigger: 'blur' },
+  ],
+  imageBase64: [{ required: true, message: '請上傳圖片', trigger: 'change' }],
 }
 
 // 新增一個圖片縮放的方法
@@ -121,6 +133,12 @@ function handleFileChange(event) {
   }
 }
 
+/**
+ * 移除圖片
+ * @description 將 form.imageBase64 清空
+ * @description 將 imagePreview.value 清空
+ * @description 清空 input[type=file]
+ */
 function removeImage() {
   form.imageBase64 = ''
   imagePreview.value = null
@@ -132,6 +150,7 @@ function resetForm() {
   form.name = ''
   form.category = ''
   form.price = null
+  form.stock = 0
   form.description = ''
   form.imageBase64 = ''
   imagePreview.value = null
@@ -139,10 +158,14 @@ function resetForm() {
 }
 
 function cancelEdit() {
-  goTo('products')
+  goTo('ProductList')
 }
 
-// 元件掛載時，自動載入商品資料
+/**
+ * 編輯模式載入商品資料
+ * @description 將商品資料載入到表單中
+ *
+ */
 onMounted(async () => {
   productId.value = route.params?.id
   if (productId.value) {
@@ -160,8 +183,10 @@ onMounted(async () => {
   }
 })
 
-// ... (圖片處理、表單重設等方法，與 AddProduct.vue 相同)
-// 注意：submitForm 應該呼叫 api.updateProduct
+/**
+ * 表單提交
+ * @description 當表單驗證通過時，執行更新操作
+ */
 function submitForm() {
   formRef.value.validate(async (valid) => {
     if (!valid) return
@@ -169,7 +194,7 @@ function submitForm() {
       await api.updateProduct(productId.value, form)
       ElMessage.success('商品更新成功！')
       // 更新後可以導航回商品列表
-      // router.push({ name: 'ProductList' })
+      goTo('ProductList')
     } catch (error) {
       ElMessage.error('更新失敗，請稍後再試')
     }
