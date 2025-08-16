@@ -35,6 +35,7 @@ const api = {
 
   // 刪除產品
   deleteProduct: (id) => apiService.put(API_ROUTES.PRODUCT_DELETE(id)),
+  
 }
 
 export default api
