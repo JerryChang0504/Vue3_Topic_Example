@@ -45,6 +45,10 @@
           </template>
         </el-table-column>
 
+        <el-table-column prop="states" label="狀態" width="100" sortable>
+          <template #default="{ row }"> {{ row.states }} </template>
+        </el-table-column>
+
         <el-table-column label="操作" width="180" fixed="right">
           <template #default="{ row }">
             <el-button size="small" type="primary" @click="editProduct(row.id)"> 編輯 </el-button>
@@ -91,7 +95,10 @@ const deleteProduct = async (productId) => {
     const res = await api.deleteProduct(productId)
     if (res.code === '0000') {
       ElMessage.success('商品刪除成功！')
+<<<<<<< HEAD
       // products.value = products.value.filter((p) => p.id !== productId)
+=======
+>>>>>>> dev_Jerry
     }
   } catch (err) {
     if (err !== 'cancel') {
