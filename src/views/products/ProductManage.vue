@@ -105,7 +105,7 @@ const deleteProduct = async (productId) => {
     const res = await api.deleteProduct(productId)
     if (res.code === '0000') {
       ElMessage.success('商品刪除成功！')
-      products.value = products.value.filter((p) => p.id !== productId)
+      //products.value = products.value.filter((p) => p.id !== productId)
     }
   } catch (err) {
     if (err !== 'cancel') {
