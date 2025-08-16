@@ -1,5 +1,5 @@
 <script setup>
-import { Camera, Coffee, Cpu, Flag, Mic, Monitor, Suitcase } from '@element-plus/icons-vue'
+import { Coffee, Cpu, Flag, Monitor, Suitcase } from '@element-plus/icons-vue'
 import Breadcrumb from './navigation/Breadcrumb.vue'
 import CategorySidebar from './navigation/CategorySidebar.vue'
 import TopBar from './navigation/TopBar.vue'
@@ -22,10 +22,7 @@ const categories = [
     clickable: false,
     subs: [
       { name: 'food', label: '美食', icon: Coffee },
-      { name: 'food', label: '音樂', icon: Mic },
-      { name: 'food', label: '攝影', icon: Camera },
       {
-
         name: 'travel',
         label: '旅遊',
         icon: Suitcase,
@@ -61,8 +58,7 @@ const categories = [
 .layout {
   display: flex;
   min-height: 100vh;
-  background-color: #f5f7fa;
-  /* 整體背景 */
+  background-color: #f5f7fa; /* 整體背景 */
 }
 
 /* 側邊欄 */
