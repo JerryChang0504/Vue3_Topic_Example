@@ -24,7 +24,7 @@
     </div>
 
     <el-row v-if="isLoading" :gutter="20">
-      <el-col v-for="i in 8" :key="i" :span="6" class="product-col">
+      <el-col v-for="i in 4" :key="i" :span="6" class="product-col">
         <el-skeleton animated :rows="5" />
       </el-col>
     </el-row>
