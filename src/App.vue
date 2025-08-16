@@ -1,5 +1,5 @@
 <script setup>
-import { Coffee, Cpu, Flag, Monitor, Suitcase } from '@element-plus/icons-vue'
+import { Coffee, Cpu, Flag, Monitor, Suitcase, InfoFilled, List } from '@element-plus/icons-vue'
 import Breadcrumb from './navigation/Breadcrumb.vue'
 import CategorySidebar from './navigation/CategorySidebar.vue'
 import TopBar from './navigation/TopBar.vue'
@@ -11,8 +11,8 @@ const categories = [
     icon: Monitor,
     clickable: false,
     subs: [
-      { name: '', label: '商品介紹', icon: Cpu },
-      { name: 'list', label: '商品管理', icon: Cpu },
+      { name: '', label: '商品介紹', icon: InfoFilled },
+      { name: 'list', label: '商品管理', icon: List },
     ],
   },
   {
@@ -30,6 +30,7 @@ const categories = [
         subs: [
           { name: 'usa', label: '美國', icon: Flag },
           { name: 'canada', label: '加拿大', icon: Flag },
+          { name: 'taiwan', label: '台灣', icon: Flag },
         ],
       },
     ],
@@ -58,7 +59,8 @@ const categories = [
 .layout {
   display: flex;
   min-height: 100vh;
-  background-color: #f5f7fa; /* 整體背景 */
+  background-color: #f5f7fa;
+  /* 整體背景 */
 }
 
 /* 側邊欄 */
