@@ -29,11 +29,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
-import api from '@/service/api'
-import { useRouter } from 'vue-router'
 import { useNavigation } from '@/composables/useNavigation'
+import api from '@/service/api'
+import Storage, { TOKEN_KEY } from '@/utils/storageUtil'
+import { ElMessage } from 'element-plus'
+import { onMounted, ref } from 'vue'
 
 const { goLogin } = useNavigation()
 const profileForm = ref()
@@ -46,7 +46,7 @@ const form = ref({
 })
 
 onMounted(async () => {
-  const token = localStorage.getItem('token')
+  const token = Storage.get(TOKEN_KEY)
 
   if (!token) {
     ElMessage.error('請先登入')

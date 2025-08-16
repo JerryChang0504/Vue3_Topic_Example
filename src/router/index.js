@@ -1,7 +1,7 @@
-import { createWebHistory, createRouter } from 'vue-router'
-import About from '@/views/About.vue'
-import UserPost from '@/views/UserPost.vue'
 import CategoryPage from '@/navigation/sub/CategoryPage.vue'
+import Storage, { TOKEN_KEY } from '@/utils/storageUtil'
+import { createRouter, createWebHistory } from 'vue-router'
+
 const routes = [
   { path: '/', name: 'Home', component: () => import('@/views/Home.vue') },
   { path: '/login', name: 'Login', component: () => import('@/views/users/Login.vue') },
@@ -14,7 +14,7 @@ const routes = [
   },
   {
     path: '/products',
-    name: 'products',
+    name: 'Products',
     component: () => import('@/views/products/ProductList.vue'),
   },
   {
@@ -23,12 +23,22 @@ const routes = [
     component: () => import('@/views/products/AddProduct.vue'),
   },
   {
+    path: '/products/list',
+    name: 'ProductList',
+    component: () => import('@/views/products/ProductManage.vue'),
+  },
+  {
     path: '/products/edit/:id',
     name: 'EditProduct',
     component: () => import('@/views/products/EditProduct.vue'),
   },
-  { path: '/about', name: 'About', component: About },
-  { path: '/users/:username/posts/:postId', component: UserPost },
+  {
+    path: '/checkout',
+    name: 'Checkout',
+    component: () => import('@/views/checkout/checkout.vue'),
+    meta: { requiresAuth: true },
+  },
+  { path: '/about', name: 'About', component: () => import('@/views/About.vue') },
   {
     path: '/:paths(.*)*',
     name: 'Category',
@@ -43,7 +53,8 @@ const router = createRouter({
 })
 // ✅ 加入全域導航守衛：權限驗證
 router.beforeEach((to, from, next) => {
-  const isLoggedIn = !!localStorage.getItem('token')
+  // 檢查是否已登入
+  const isLoggedIn = !!Storage.get(TOKEN_KEY)
 
   if (to.meta.requiresAuth && !isLoggedIn) {
     return next('/login')

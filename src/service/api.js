@@ -1,5 +1,6 @@
-import apiService from './apiService'
+import Storage, { TOKEN_KEY } from '@/utils/storageUtil'
 import { API_ROUTES } from './apiRoutes'
+import apiService from './apiService'
 
 const api = {
   // 註冊
@@ -7,7 +8,7 @@ const api = {
   // 登入
   login: async (data) => {
     const res = await apiService.post(API_ROUTES.LOGIN, data)
-    localStorage.setItem('token', res.result)
+    Storage.set(TOKEN_KEY, res.result)
     return res
   },
   // 用戶資料
@@ -28,6 +29,12 @@ const api = {
   getProductById: (id) => apiService.get(API_ROUTES.PRODUCT_DETAIL(id)),
   // 更新產品資料
   updateProduct: (id, data) => apiService.put(API_ROUTES.PRODUCT_UPDATE(id), data),
+
+  // 取得產品管理列表
+  getManageProducts: () => apiService.get(API_ROUTES.PRODUCT_MANAGE_LIST),
+
+  // 刪除產品
+  deleteProduct: (id) => apiService.put(API_ROUTES.PRODUCT_DELETE(id)),
 }
 
 export default api

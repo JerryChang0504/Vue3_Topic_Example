@@ -15,7 +15,7 @@
 
       <!-- 漢堡下拉選單 -->
       <el-dropdown>
-        <el-button type="text" class="hamburger-btn">
+        <el-button type="link" class="hamburger-btn">
           <el-icon><More /></el-icon>
         </el-button>
         <template #dropdown>
