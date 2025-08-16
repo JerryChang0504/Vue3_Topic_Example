@@ -1,3 +1,4 @@
+import Storage, { CART_KEY, TOKEN_KEY } from '@/utils/storageUtil'
 import { defineStore } from 'pinia'
 
 function parseJwt(token) {
@@ -75,7 +76,8 @@ export const useUserStore = defineStore('userStore', {
     logout() {
       this.stopTokenCountdown()
       this.user.isLogin = false
-      localStorage.removeItem('token')
+      Storage.remove(TOKEN_KEY)
+      Storage.remove(CART_KEY)
       this.remainingTime = 0
     },
   },

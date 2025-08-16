@@ -1,5 +1,7 @@
 import CategoryPage from '@/navigation/sub/CategoryPage.vue'
+import Storage, { TOKEN_KEY } from '@/utils/storageUtil'
 import { createRouter, createWebHistory } from 'vue-router'
+
 const routes = [
   { path: '/', name: 'Home', component: () => import('@/views/Home.vue') },
   { path: '/login', name: 'Login', component: () => import('@/views/users/Login.vue') },
@@ -52,7 +54,7 @@ const router = createRouter({
 // ✅ 加入全域導航守衛：權限驗證
 router.beforeEach((to, from, next) => {
   // 檢查是否已登入
-  const isLoggedIn = !!localStorage.getItem('token')
+  const isLoggedIn = !!Storage.get(TOKEN_KEY)
 
   if (to.meta.requiresAuth && !isLoggedIn) {
     return next('/login')

@@ -1,8 +1,9 @@
+import Storage, { CART_KEY } from '@/utils/storageUtil'
 import { defineStore } from 'pinia'
 
 export const useCartStore = defineStore('cartStore', {
   state: () => ({
-    cart: [],
+    cart: Storage.get(CART_KEY) || [],
   }),
   getters: {
     carEmpty: (state) => (!state.cart.length > 0 ? true : false),
@@ -18,9 +19,11 @@ export const useCartStore = defineStore('cartStore', {
   actions: {
     addProduct(product) {
       this.cart.push({ ...product, quantity: 1 })
+      Storage.set(CART_KEY, this.cart)
     },
     removeProduct(productId) {
       this.cart = this.cart.filter((item) => item.id !== productId)
+      Storage.set(CART_KEY, this.cart)
     },
   },
 })

@@ -1,8 +1,7 @@
 <template>
   <div class="checkout-page">
-    <div class="container mx-auto px-4 py-8">
-      <!-- 步驟指示器 -->
-      <div class="mb-8">
+    <div class="container">
+      <div class="step-indicator">
         <el-steps :active="currentStep" finish-status="success" align-center>
           <el-step title="確認商品"></el-step>
           <el-step title="配送資訊"></el-step>
@@ -11,57 +10,33 @@
         </el-steps>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- 主要內容區 -->
-        <div class="lg:col-span-2">
-          <!-- 步驟 1: 確認商品 -->
+      <div class="checkout-grid">
+        <div class="main-content">
           <div v-if="currentStep === 0" class="checkout-step">
-            <h2 class="text-xl font-semibold mb-4">確認購買商品</h2>
+            <h2 class="step-title">確認購買商品</h2>
             <div class="space-y-4">
-              <div
-                v-for="item in cartItems"
-                :key="item.id"
-                class="flex items-center p-4 border rounded-lg"
-              >
-                <img :src="item.image" :alt="item.name" class="w-16 h-16 object-cover rounded" />
-                <div class="ml-4 flex-1">
-                  <h3 class="font-medium">{{ item.name }}</h3>
-                  <p class="text-gray-600">{{ item.description }}</p>
-                  <div class="flex items-center mt-2">
-                    <span class="text-sm text-gray-500">數量:</span>
-                    <el-input-number
-                      v-model="item.quantity"
-                      :min="1"
-                      :max="99"
-                      size="small"
-                      class="ml-2"
-                      @change="updateQuantity(item.id, item.quantity)"
-                    />
+              <div v-for="item in cartItems" :key="item.id" class="item-card">
+                <img :src="item.imageBase64" :alt="item.name" class="item-image" />
+                <div class="item-details">
+                  <h3 class="item-name">{{ item.name }}</h3>
+                  <p class="item-description">{{ item.description }}</p>
+                  <div class="item-quantity">
+                    <span class="quantity-label">數量:</span>
+                    {{ item.quantity }}
                   </div>
                 </div>
-                <div class="text-right">
-                  <div class="text-lg font-semibold text-primary">
+                <div class="item-price-info">
+                  <div class="item-total-price">
                     NT$ {{ (item.price * item.quantity).toLocaleString() }}
                   </div>
-                  <div class="text-sm text-gray-500">
-                    單價: NT$ {{ item.price.toLocaleString() }}
-                  </div>
+                  <div class="item-unit-price">單價: NT$ {{ item.price.toLocaleString() }}</div>
                 </div>
-                <el-button
-                  type="danger"
-                  size="small"
-                  icon="Delete"
-                  circle
-                  class="ml-4"
-                  @click="removeItem(item.id)"
-                />
               </div>
             </div>
           </div>
 
-          <!-- 步驟 2: 配送資訊 -->
           <div v-if="currentStep === 1" class="checkout-step">
-            <h2 class="text-xl font-semibold mb-4">配送資訊</h2>
+            <h2 class="step-title">配送資訊</h2>
             <el-form
               :model="shippingForm"
               :rules="shippingRules"
@@ -77,8 +52,8 @@
               </el-form-item>
 
               <el-form-item label="配送地址" prop="address">
-                <div class="space-y-2">
-                  <div class="flex gap-2">
+                <div class="address-fields">
+                  <div class="address-selects">
                     <el-select v-model="shippingForm.city" placeholder="選擇縣市" class="flex-1">
                       <el-option
                         v-for="city in cities"
@@ -111,22 +86,16 @@
 
               <el-form-item label="配送方式" prop="shippingMethod">
                 <el-radio-group v-model="shippingForm.shippingMethod">
-                  <el-radio label="standard" class="block mb-2">
-                    <div class="flex justify-between items-center w-full">
-                      <div>
-                        <div class="font-medium">標準配送</div>
-                        <div class="text-sm text-gray-500">3-5 個工作天</div>
-                      </div>
-                      <span class="text-green-600 font-medium">免費</span>
+                  <el-radio label="standard" class="shipping-radio">
+                    <div class="shipping-option">
+                      <div class="shipping-name">標準配送 3-5 個工作天</div>
+                      <span class="shipping-price">免費</span>
                     </div>
                   </el-radio>
-                  <el-radio label="express" class="block">
-                    <div class="flex justify-between items-center w-full">
-                      <div>
-                        <div class="font-medium">快速配送</div>
-                        <div class="text-sm text-gray-500">1-2 個工作天</div>
-                      </div>
-                      <span class="text-orange-600 font-medium">NT$ 100</span>
+                  <el-radio label="express" class="shipping-radio">
+                    <div class="shipping-option">
+                      <div class="shipping-name">快速配送 1-2 個工作天</div>
+                      <span class="shipping-price">NT$ 100</span>
                     </div>
                   </el-radio>
                 </el-radio-group>
@@ -143,44 +112,36 @@
             </el-form>
           </div>
 
-          <!-- 步驟 3: 付款方式 -->
           <div v-if="currentStep === 2" class="checkout-step">
-            <h2 class="text-xl font-semibold mb-4">付款方式</h2>
+            <h2 class="step-title">付款方式</h2>
             <el-radio-group v-model="paymentMethod" class="space-y-4">
-              <el-radio label="credit_card" class="block p-4 border rounded-lg">
-                <div class="flex items-center">
-                  <div class="flex-1">
-                    <div class="font-medium">信用卡付款</div>
-                    <div class="text-sm text-gray-500">支援 Visa、Mastercard、JCB</div>
+              <el-radio label="credit_card" class="payment-option-card">
+                <div class="payment-option-content">
+                  <div class="payment-text">
+                    <div class="payment-name">信用卡付款</div>
+                    <div class="payment-description">支援 Visa、Mastercard、JCB</div>
                   </div>
-                  <div class="flex space-x-2">
-                    <!-- <img src="/images/visa.png" alt="Visa" class="h-6" />
-                    <img src="/images/mastercard.png" alt="Mastercard" class="h-6" /> -->
-                  </div>
+                  <div class="card-icons"></div>
                 </div>
               </el-radio>
 
-              <el-radio label="bank_transfer" class="block p-4 border rounded-lg">
-                <div>
-                  <div class="font-medium">銀行轉帳</div>
-                  <div class="text-sm text-gray-500">轉帳後請上傳轉帳證明</div>
+              <el-radio label="bank_transfer" class="payment-option-card">
+                <div class="payment-text">
+                  <div class="payment-name">銀行轉帳</div>
+                  <div class="payment-description">轉帳後請上傳轉帳證明</div>
                 </div>
               </el-radio>
 
-              <el-radio label="cash_on_delivery" class="block p-4 border rounded-lg">
-                <div>
-                  <div class="font-medium">貨到付款</div>
-                  <div class="text-sm text-gray-500">收到商品後再付款（需加收手續費 NT$ 30）</div>
+              <el-radio label="cash_on_delivery" class="payment-option-card">
+                <div class="payment-text">
+                  <div class="payment-name">貨到付款</div>
+                  <div class="payment-description">收到商品後再付款（需加收手續費 NT$ 30）</div>
                 </div>
               </el-radio>
             </el-radio-group>
 
-            <!-- 信用卡表單 -->
-            <div
-              v-if="paymentMethod === 'credit_card'"
-              class="mt-6 p-4 border rounded-lg bg-gray-50"
-            >
-              <h3 class="font-medium mb-4">信用卡資訊</h3>
+            <div v-if="paymentMethod === 'credit_card'" class="credit-card-form-container">
+              <h3 class="form-title">信用卡資訊</h3>
               <el-form :model="creditCardForm" :rules="creditCardRules" ref="creditCardFormRef">
                 <el-form-item label="卡號" prop="cardNumber">
                   <el-input
@@ -191,7 +152,7 @@
                   />
                 </el-form-item>
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="card-info-grid">
                   <el-form-item label="有效期限" prop="expiryDate">
                     <el-input
                       v-model="creditCardForm.expiryDate"
@@ -218,8 +179,7 @@
             </div>
           </div>
 
-          <!-- 步驟導航按鈕 -->
-          <div class="flex justify-between mt-8">
+          <div class="navigation-buttons">
             <el-button v-if="currentStep > 0" @click="previousStep" icon="ArrowLeft">
               上一步
             </el-button>
@@ -241,57 +201,47 @@
           </div>
         </div>
 
-        <!-- 側邊欄：訂單摘要 -->
-        <div class="lg:col-span-1">
-          <div class="sticky top-4">
-            <div class="bg-gray-50 p-6 rounded-lg">
-              <h3 class="text-lg font-semibold mb-4">訂單摘要</h3>
+        <div class="sidebar">
+          <div class="order-summary-card">
+            <h3 class="summary-title">訂單摘要</h3>
 
-              <div class="space-y-2 mb-4">
-                <div class="flex justify-between text-sm">
-                  <span>商品小計</span>
-                  <span>NT$ {{ subtotal.toLocaleString() }}</span>
-                </div>
-
-                <div class="flex justify-between text-sm">
-                  <span>運費</span>
-                  <span>NT$ {{ shippingFee.toLocaleString() }}</span>
-                </div>
-
-                <div
-                  v-if="paymentMethod === 'cash_on_delivery'"
-                  class="flex justify-between text-sm"
-                >
-                  <span>貨到付款手續費</span>
-                  <span>NT$ 30</span>
-                </div>
-
-                <div class="border-t pt-2">
-                  <div class="flex justify-between font-semibold text-lg">
-                    <span>總計</span>
-                    <span class="text-primary">NT$ {{ total.toLocaleString() }}</span>
-                  </div>
-                </div>
+            <div class="summary-details">
+              <div class="summary-line">
+                <span>商品小計</span>
+                <span>NT$ {{ subtotal.toLocaleString() }}</span>
               </div>
 
-              <div class="text-xs text-gray-500 mb-4">* 價格已含稅</div>
-
-              <!-- 優惠券 -->
-              <div class="mb-4">
-                <el-input v-model="couponCode" placeholder="輸入優惠券代碼" size="small">
-                  <template #append>
-                    <el-button @click="applyCoupon" :loading="applyingCoupon"> 使用 </el-button>
-                  </template>
-                </el-input>
+              <div class="summary-line">
+                <span>運費</span>
+                <span>NT$ {{ shippingFee.toLocaleString() }}</span>
               </div>
 
-              <!-- 商品列表 -->
-              <div class="space-y-2">
-                <h4 class="font-medium text-sm text-gray-700">購買商品</h4>
-                <div v-for="item in cartItems" :key="item.id" class="flex justify-between text-sm">
-                  <span>{{ item.name }} × {{ item.quantity }}</span>
-                  <span>NT$ {{ (item.price * item.quantity).toLocaleString() }}</span>
-                </div>
+              <div v-if="paymentMethod === 'cash_on_delivery'" class="summary-line">
+                <span>貨到付款手續費</span>
+                <span>NT$ 30</span>
+              </div>
+
+              <div class="summary-total-line">
+                <div class="summary-total-label">總計</div>
+                <div class="summary-total-price">NT$ {{ total.toLocaleString() }}</div>
+              </div>
+            </div>
+
+            <div class="tax-info">* 價格已含稅</div>
+
+            <div class="coupon-section">
+              <el-input v-model="couponCode" placeholder="輸入優惠券代碼" size="small">
+                <template #append>
+                  <el-button @click="applyCoupon" :loading="applyingCoupon"> 使用 </el-button>
+                </template>
+              </el-input>
+            </div>
+
+            <div class="summary-item-list">
+              <h4 class="summary-item-list-title">購買商品</h4>
+              <div v-for="item in cartItems" :key="item.id" class="summary-item-line">
+                <span>{{ item.name }} × {{ item.quantity }}</span>
+                <span>NT$ {{ (item.price * item.quantity).toLocaleString() }}</span>
               </div>
             </div>
           </div>
@@ -302,16 +252,16 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { ElMessage, ElMessageBox } from 'element-plus'
 import { useNavigation } from '@/composables/useNavigation'
 import api from '@/service/api'
-import { useCartStore } from '@/store/carStore'
+import { useCartStore } from '@/store/cartStore'
+import Storage, { CART_KEY } from '@/utils/storageUtil'
+import { ElMessage } from 'element-plus'
+import { computed, onMounted, ref } from 'vue'
+
 const cartStore = useCartStore()
 const cart = computed(() => cartStore.cart)
 
-const router = useRouter()
 const { goTo } = useNavigation()
 
 // 響應式數據
@@ -372,6 +322,10 @@ const cities = ref([
 
 const districts = ref([])
 
+const handleShippingChange = ({ value, option, additionalCost }) => {
+  console.log('配送方式:', option.name)
+  console.log('額外費用:', additionalCost)
+}
 // 計算屬性
 const subtotal = computed(() => {
   return cartItems.value.reduce((sum, item) => sum + item.price * item.quantity, 0)
@@ -392,24 +346,6 @@ const total = computed(() => {
 // 方法
 const loadCartItems = () => {
   cartItems.value = cart.value
-}
-
-const updateQuantity = (itemId, quantity) => {
-  const item = cartItems.value.find((item) => item.id === itemId)
-  if (item) {
-    item.quantity = quantity
-    localStorage.setItem('cartItems', JSON.stringify(cartItems.value))
-  }
-}
-
-const removeItem = (itemId) => {
-  cartItems.value = cartItems.value.filter((item) => item.id !== itemId)
-  localStorage.setItem('cartItems', JSON.stringify(cartItems.value))
-
-  if (cartItems.value.length === 0) {
-    ElMessage.warning('購物車已清空')
-    goTo('products')
-  }
 }
 
 const nextStep = async () => {
@@ -453,7 +389,7 @@ const submitOrder = async () => {
     const response = await api.order.create(orderData)
 
     // 清空購物車
-    localStorage.removeItem('cartItems')
+    Storage.remove(CART_KEY)
 
     // 跳轉到成功頁面
     goTo('CheckoutSuccess', { orderId: response.data.id })
@@ -508,20 +444,298 @@ const formatExpiryDate = (value) => {
 // 生命週期
 onMounted(() => {
   loadCartItems()
-
-  // if (cartItems.value.length === 0) {
-  //   ElMessage.warning('購物車是空的')
-  //   goTo('Cart')
-  // }
 })
 </script>
 
 <style scoped>
-.checkout-step {
-  @apply bg-white p-6 rounded-lg shadow-sm border;
+.checkout-page {
+  padding: 32px 16px;
 }
 
-.primary {
-  @apply text-blue-600;
+.container {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 32px 16px;
+}
+
+.step-indicator {
+  margin-bottom: 32px;
+}
+
+.checkout-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+
+@media (min-width: 1024px) {
+  .checkout-grid {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.main-content {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 1024px) {
+  .main-content {
+    grid-column: span 2 / span 2;
+  }
+}
+
+.sidebar {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 1024px) {
+  .sidebar {
+    grid-column: span 1 / span 1;
+  }
+}
+
+/* Steps */
+.checkout-step {
+  margin-bottom: 32px;
+}
+
+.step-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+/* Item Card */
+.space-y-4 > * + * {
+  margin-top: 16px;
+}
+
+.item-card {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.item-image {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.item-details {
+  margin-left: 16px;
+  flex: 1;
+}
+
+.item-name {
+  font-weight: 500;
+}
+
+.item-description {
+  color: #6b7280;
+}
+
+.item-quantity {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.quantity-label {
+  margin-right: 8px;
+}
+
+.item-price-info {
+  text-align: right;
+}
+
+.item-total-price {
+  font-size: 18px;
+  font-weight: 600;
+  color: #f97316;
+}
+
+.item-unit-price {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* Shipping Form */
+.address-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.address-selects {
+  display: flex;
+  gap: 8px;
+}
+
+.shipping-radio {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.shipping-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.shipping-name {
+  font-weight: 500;
+}
+
+.shipping-price {
+  color: #ea580c;
+  font-weight: 500;
+}
+
+/* Payment Methods */
+.payment-option-card {
+  display: block;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.payment-option-content {
+  display: flex;
+  align-items: center;
+}
+
+.payment-text {
+  flex: 1;
+}
+
+.payment-name {
+  font-weight: 500;
+}
+
+.payment-description {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.card-icons {
+  display: flex;
+  gap: 8px;
+}
+
+.card-icon {
+  height: 24px;
+}
+
+.credit-card-form-container {
+  margin-top: 24px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: #f9fafb;
+}
+
+.form-title {
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.card-info-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .card-info-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Navigation Buttons */
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 32px;
+}
+
+/* Order Summary */
+.sidebar {
+  position: sticky;
+  top: 16px;
+}
+
+.order-summary-card {
+  background-color: #f9fafb;
+  padding: 24px;
+  border-radius: 8px;
+}
+
+.summary-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.summary-details {
+  margin-bottom: 16px;
+}
+
+.summary-details > * + * {
+  margin-top: 8px;
+}
+
+.summary-line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.summary-total-line {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.summary-total-price {
+  color: #f97316;
+}
+
+.tax-info {
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 16px;
+}
+
+.coupon-section {
+  margin-bottom: 16px;
+}
+
+.summary-item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.summary-item-list-title {
+  font-weight: 500;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.summary-item-line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
 }
 </style>

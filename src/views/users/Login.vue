@@ -38,11 +38,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
+import { useNavigation } from '@/composables/useNavigation'
 import api from '@/service/api'
 import { useUserStore } from '@/store/userStore'
-import { useNavigation } from '@/composables/useNavigation'
+import Storage, { USER_KEY } from '@/utils/storageUtil'
+import { ElMessage } from 'element-plus'
+import { onMounted, ref } from 'vue'
 
 const { goTo, goHome } = useNavigation()
 
@@ -50,8 +51,8 @@ const loginForm = ref()
 const userStore = useUserStore()
 
 const form = ref({
-  username: 'john_doe',
-  password: 'P@ssw0rd123',
+  username: 'Admin',
+  password: '@A123456',
   rememberMe: false,
 })
 
@@ -69,7 +70,7 @@ const rules = {
 
 // 載入記住的帳號
 onMounted(() => {
-  const rememberedUsername = localStorage.getItem('rememberedUsername')
+  const rememberedUsername = Storage.get(USER_KEY)
   if (rememberedUsername) {
     form.value.username = rememberedUsername
     form.value.rememberMe = true

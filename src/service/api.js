@@ -1,3 +1,4 @@
+import Storage, { TOKEN_KEY } from '@/utils/storageUtil'
 import { API_ROUTES } from './apiRoutes'
 import apiService from './apiService'
 
@@ -7,7 +8,7 @@ const api = {
   // 登入
   login: async (data) => {
     const res = await apiService.post(API_ROUTES.LOGIN, data)
-    localStorage.setItem('token', res.result)
+    Storage.set(TOKEN_KEY, res.result)
     return res
   },
   // 用戶資料

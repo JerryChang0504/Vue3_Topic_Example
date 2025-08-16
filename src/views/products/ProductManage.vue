@@ -1,11 +1,16 @@
 <template>
-  <div class="container mx-auto px-4 py-6">
-    <div class="flex justify-between items-center mb-6">
-      <h2 class="text-2xl font-bold">商品管理</h2>
-      <div class="flex items-center">
+  <div class="container">
+    <div class="header">
+      <h2 class="title">商品管理</h2>
+      <div class="header-actions">
         <el-button @click="goTo('AddProduct')" type="primary"> + 新增商品 </el-button>
 
-        <el-select v-model="selectedCategory" placeholder="選擇分類" clearable class="mr-4 w-40">
+        <el-select
+          v-model="selectedCategory"
+          placeholder="選擇分類"
+          clearable
+          class="select-category"
+        >
           <el-option label="全部" value="" />
           <el-option
             v-for="category in categories"
@@ -25,7 +30,7 @@
               :src="row.imageBase64"
               fit="cover"
               style="width: 60px; height: 60px"
-              class="rounded"
+              class="img-rounded"
               lazy
             >
               <template #error>
@@ -47,10 +52,9 @@
 
         <el-table-column prop="stock" label="庫存" width="100" sortable>
           <template #default="{ row }">
-            <div class="flex flex-col items-center">
-              <span class="text-base">{{ row.stock }}</span>
-
-              <p v-if="row.stock <= 5" class="text-xs text-red-500 mt-1">庫存緊張</p>
+            <div class="stock-wrapper">
+              <span class="stock-text">{{ row.stock }}</span>
+              <p v-if="row.stock <= 5" class="stock-warning">庫存緊張</p>
             </div>
           </template>
         </el-table-column>
@@ -69,6 +73,7 @@
 <script setup>
 import { useNavigation } from '@/composables/useNavigation'
 import api from '@/service/api'
+import { Picture } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { computed, onMounted, ref } from 'vue'
 
@@ -80,18 +85,15 @@ const selectedCategory = ref('')
 const isLoading = ref(true)
 
 const filteredProducts = computed(() => {
-  const filtered = selectedCategory.value
+  return selectedCategory.value
     ? products.value.filter((p) => p.category === selectedCategory.value)
     : products.value
-  return filtered
 })
 
-// 編輯商品
 const editProduct = (productId) => {
   goTo('EditProduct', { id: productId })
 }
 
-// 刪除商品 (新增功能)
 const deleteProduct = async (productId) => {
   try {
     await ElMessageBox.confirm('確定要刪除這項商品嗎？此操作無法復原。', '警告', {
@@ -100,11 +102,9 @@ const deleteProduct = async (productId) => {
       type: 'warning',
     })
 
-    // 執行 API 刪除
     const res = await api.deleteProduct(productId)
     if (res.code === '0000') {
       ElMessage.success('商品刪除成功！')
-      // 從本地列表移除商品
       products.value = products.value.filter((p) => p.id !== productId)
     }
   } catch (err) {
@@ -133,16 +133,62 @@ onMounted(async () => {
 <style scoped>
 .container {
   max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px;
 }
 
-/* 使用深層選擇器調整樣式 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+}
+
+.select-category {
+  margin-left: 16px;
+  width: 160px;
+}
+
+.product-table-container {
+  overflow-x: auto;
+}
+
+.img-rounded {
+  border-radius: 8px;
+}
+
+.stock-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stock-text {
+  font-size: 14px;
+}
+
+.stock-warning {
+  font-size: 12px;
+  color: red;
+  margin-top: 4px;
+}
+
+/* 深層選擇器修改 Element Plus 元件樣式 */
 ::v-deep(.el-input-number.el-input-number--small) {
-  /* 調整整體寬度 */
   width: 90px;
 }
 
 ::v-deep(.el-input-number.el-input-number--small .el-input__inner) {
-  /* 調整輸入框高度和字體大小 */
   height: 24px;
   line-height: 24px;
   font-size: 12px;
@@ -150,7 +196,6 @@ onMounted(async () => {
 
 ::v-deep(.el-input-number.el-input-number--small .el-input-number__decrease),
 ::v-deep(.el-input-number.el-input-number--small .el-input-number__increase) {
-  /* 調整按鈕高度 */
   height: 24px;
   width: 24px;
 }

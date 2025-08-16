@@ -3,19 +3,6 @@ import { Coffee, Cpu, Flag, Monitor, Suitcase } from '@element-plus/icons-vue'
 import Breadcrumb from './navigation/Breadcrumb.vue'
 import CategorySidebar from './navigation/CategorySidebar.vue'
 import TopBar from './navigation/TopBar.vue'
-import api from './service/api'
-
-import { onMounted } from 'vue'
-
-const getusers = async () => {
-  const res = await api.user()
-  console.log('🚀 ~ res:', res?.result)
-  return res
-}
-
-onMounted(() => {
-  getusers()
-})
 
 const categories = [
   {

@@ -42,7 +42,8 @@
 
       <el-form-item>
         <el-button type="primary" @click="submitForm">新增商品</el-button>
-        <el-button @click="resetForm" type="default">重設</el-button>
+        <el-button type="default" @click="resetForm">重設</el-button>
+        <el-button type="success" @click="back">返回</el-button>
       </el-form-item>
     </el-form>
 
@@ -63,7 +64,7 @@ import { ElMessage } from 'element-plus'
 import { reactive, ref } from 'vue'
 
 const formRef = ref()
-const { goTo } = useNavigation()
+const { goTo, goBack } = useNavigation()
 const successDialogVisible = ref(false)
 const imagePreview = ref(null)
 
@@ -186,5 +187,9 @@ function submitForm() {
     }
     document.querySelector('input[type="file"]').value = ''
   })
+}
+
+function back() {
+  goBack()
 }
 </script>

@@ -1,9 +1,14 @@
 <template>
-  <div class="container mx-auto px-4 py-6">
-    <div class="flex justify-between items-center mb-6">
-      <h2 class="text-2xl font-bold">商品列表</h2>
-      <div class="flex items-center">
-        <el-select v-model="selectedCategory" placeholder="選擇分類" clearable class="mr-4">
+  <div class="product-list-container">
+    <div class="product-list-header">
+      <h2 class="header-title">商品列表</h2>
+      <div class="header-controls">
+        <el-select
+          v-model="selectedCategory"
+          placeholder="選擇分類"
+          clearable
+          class="category-select"
+        >
           <el-option label="全部" value="" />
           <el-option
             v-for="category in categories"
@@ -19,7 +24,7 @@
     </div>
 
     <el-row v-if="isLoading" :gutter="20">
-      <el-col v-for="i in 8" :key="i" :span="6" class="mb-6">
+      <el-col v-for="i in 8" :key="i" :span="6" class="product-col">
         <el-skeleton animated :rows="5" />
       </el-col>
     </el-row>
@@ -33,29 +38,33 @@
         :sm="12"
         :md="8"
         :lg="6"
-        class="mb-6"
+        class="product-col"
       >
         <el-card shadow="hover" body-style="padding: 0;">
-          <div
-            class="relative w-full h-40 overflow-hidden cursor-pointer"
-            @click="showProductDetail(product)"
-          >
+          <div class="card-image-wrapper" @click="showProductDetail(product)">
             <el-tooltip :content="product.description" placement="top">
               <img
                 :src="product.imageBase64"
                 loading="lazy"
                 alt="product image"
-                class="w-full h-full object-cover"
+                class="card-image"
                 @error="handleImageError"
               />
             </el-tooltip>
           </div>
-          <div class="p-4">
-            <h3 class="text-lg font-bold truncate">{{ product.name }}</h3>
-            <p class="text-sm text-gray-500 mb-1">{{ product.category }}</p>
-            <el-rate v-model="product.rating" disabled show-score :max="5" class="mb-2" />
-            <p class="text-red-600 text-xl font-semibold mb-2">$ {{ product.price }}</p>
-            <el-button type="primary" size="small" class="w-full" @click="addToCart(product)">
+
+          <div class="card-body">
+            <h3 class="product-name">{{ product.name }}</h3>
+            <p class="product-category">{{ product.category }}</p>
+            <el-rate v-model="product.rating" disabled show-score :max="5" class="product-rating" />
+            <p class="product-price">$ {{ product.price }}</p>
+
+            <el-button
+              type="primary"
+              size="small"
+              class="add-to-cart-button"
+              @click="addToCart(product)"
+            >
               加入購物車
             </el-button>
           </div>
@@ -63,26 +72,22 @@
       </el-col>
     </el-row>
 
-    <div v-if="visibleCount < filteredProducts.length" class="text-center mt-4">
+    <div v-if="visibleCount < filteredProducts.length" class="load-more-container">
       <el-button @click="loadMore" type="primary" plain>載入更多</el-button>
     </div>
 
     <el-dialog v-model="dialogVisible" :title="currentProduct.name" width="1000px">
-      <div v-if="currentProduct" class="flex flex-col items-center">
-        <img
-          :src="currentProduct.imageBase64"
-          alt="product image"
-          class="w-full mb-4 rounded max-w-md"
-        />
-        <div class="p-2 text-center">
-          <p class="text-xl font-bold mb-2">$ {{ currentProduct.price }}</p>
-          <p class="text-gray-700 mb-4">{{ currentProduct.description }}</p>
+      <div v-if="currentProduct" class="product-detail-dialog">
+        <img :src="currentProduct.imageBase64" alt="product image" class="product-detail-image" />
+        <div class="product-detail-content">
+          <p class="detail-price">$ {{ currentProduct.price }}</p>
+          <p class="detail-description">{{ currentProduct.description }}</p>
           <el-rate
             v-model="currentProduct.rating"
             disabled
             show-score
             :max="5"
-            class="mb-2 justify-center"
+            class="detail-rating"
           />
         </div>
       </div>
@@ -94,23 +99,21 @@
 
 <script setup>
 import CartDrawer from '@/components/CartDrawer.vue'
-import { useNavigation } from '@/composables/useNavigation'
 import api from '@/service/api'
-import { useCartStore } from '@/store/carStore'
+import { useCartStore } from '@/store/cartStore'
+import Storage, { CART_KEY } from '@/utils/storageUtil'
 import { ElMessage } from 'element-plus'
 import { computed, onMounted, ref } from 'vue'
 
-const { goTo } = useNavigation()
 const cartStore = useCartStore()
-
 const products = ref([])
 const categories = ref([])
 const selectedCategory = ref('')
 const isLoading = ref(true)
-const loadMoreCount = 4 // 每次載入 4 筆
-const visibleCount = ref(loadMoreCount) // 初始顯示 12 筆
+const loadMoreCount = 4
+const visibleCount = ref(loadMoreCount)
 const dialogVisible = ref(false)
-const drawerVisible = ref(false) // 新增控制抽屜的變數
+const drawerVisible = ref(false)
 const currentProduct = ref({})
 
 const handleImageError = (e) => {
@@ -121,7 +124,6 @@ const loadMore = () => {
   visibleCount.value += loadMoreCount
 }
 
-// 分類
 const filteredProducts = computed(() => {
   const filtered = selectedCategory.value
     ? products.value.filter((p) => p.category === selectedCategory.value)
@@ -136,10 +138,8 @@ const showProductDetail = (product) => {
   dialogVisible.value = true
 }
 
-// 加入購物車函式 (已修改)
 const addToCart = (product) => {
   const existingItem = cartStore.cart.find((item) => item.id === product.id)
-
   if (existingItem) {
     existingItem.quantity += 1
     ElMessage.success(`${product.name} 數量已更新為 ${existingItem.quantity}`)
@@ -147,19 +147,17 @@ const addToCart = (product) => {
     cartStore.addProduct(product)
     ElMessage.success(`${product.name} 已加入購物車`)
   }
-
   drawerVisible.value = true
 }
 
-// 移除購物車商品函式 (新功能)
 const removeItem = (productId) => {
   cartStore.removeProduct(productId)
   ElMessage.success('商品已從購物車移除')
 }
 
 onMounted(async () => {
+  Storage.get(CART_KEY)
   try {
-    // 取得產品列表
     const res = await api.getProducts()
     if (res.code === '0000') {
       products.value = res.result
@@ -174,18 +172,141 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.container {
+/* Container & Layout */
+.product-list-container {
   max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 24px 16px;
 }
 
-/* 使用深層選擇器調整樣式 */
+.product-col {
+  margin-bottom: 24px;
+}
+
+/* Header */
+.product-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.header-title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+}
+
+.category-select {
+  width: 160px;
+  margin-right: 16px;
+}
+
+/* Product Card */
+.card-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 16px;
+}
+
+.product-name {
+  font-size: 18px;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.product-category {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.product-rating {
+  margin-bottom: 8px;
+}
+
+.product-price {
+  color: #dc2626;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.add-to-cart-button {
+  width: 100%;
+}
+
+/* Load More Button */
+.load-more-container {
+  text-align: center;
+  margin-top: 16px;
+}
+
+/* Product Detail Dialog */
+.product-detail-dialog {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.product-detail-image {
+  width: 100%;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  max-width: 448px;
+}
+
+.product-detail-content {
+  padding: 8px;
+  text-align: center;
+}
+
+.detail-price {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.detail-description {
+  color: #4b5563;
+  margin-bottom: 16px;
+}
+
+.detail-rating {
+  margin-bottom: 8px;
+  justify-content: center;
+}
+
+/* Element Plus Deep Selectors (unchanged) */
+:deep(.el-tooltip__trigger) {
+  display: block;
+  width: 100%;
+}
+
 ::v-deep(.el-input-number.el-input-number--small) {
-  /* 調整整體寬度 */
   width: 90px;
 }
 
 ::v-deep(.el-input-number.el-input-number--small .el-input__inner) {
-  /* 調整輸入框高度和字體大小 */
   height: 24px;
   line-height: 24px;
   font-size: 12px;
@@ -193,7 +314,6 @@ onMounted(async () => {
 
 ::v-deep(.el-input-number.el-input-number--small .el-input-number__decrease),
 ::v-deep(.el-input-number.el-input-number--small .el-input-number__increase) {
-  /* 調整按鈕高度 */
   height: 24px;
   width: 24px;
 }
