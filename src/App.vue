@@ -28,8 +28,9 @@ const categories = [
         icon: Suitcase,
         clickable: false,
         subs: [
-          { name: 'usa', label: '美國', icon: Flag },
+          { name: 'the USA', label: '美國', icon: Flag },
           { name: 'canada', label: '加拿大', icon: Flag },
+          { name: 'the UK', label: '英國', icon: Flag },
         ],
       },
     ],
