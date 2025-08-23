@@ -34,6 +34,12 @@
         </template>
       </el-table-column>
       <el-table-column prop="description" label="描述" />
+      <el-table-column label="操作" width="180" fixed="right">
+        <template #default="{ row }">
+          <el-button size="small" type="primary" @click="editOption(row.id)"> 編輯 </el-button>
+          <el-button size="small" type="danger" @click="deleteOption(row.id)"> 刪除 </el-button>
+        </template>
+      </el-table-column>
     </el-table>
   </div>
 </template>
@@ -41,7 +47,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import api from '@/service/api'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { Open, Close } from '@element-plus/icons-vue'
 import { useNavigation } from '@/composables/useNavigation'
 const { goTo } = useNavigation()
@@ -55,6 +61,32 @@ const filteredProducts = computed(() => {
     ? tableData.value.filter((p) => p.listName === selectedCategory.value)
     : tableData.value
 })
+
+const deleteOption = async (optionId) => {
+  try {
+    await ElMessageBox.confirm('確定要刪除這選項嗎？此操作無法復原。', '警告', {
+      confirmButtonText: '確定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
+
+    const res = await api.deleteOption(optionId)
+    if (res.code === '0000') {
+      ElMessage.success('選項刪除成功！')
+
+      //更新該筆資料
+      const index = tableData.value.findIndex((p) => p.id === res.result.id)
+      if (index !== -1) {
+        tableData.value.splice(index, 1, res.result)
+      }
+    }
+  } catch (err) {
+    if (err !== 'cancel') {
+      console.error('刪除商品失敗:', err)
+      ElMessage.error('刪除商品失敗，請稍後再試。')
+    }
+  }
+}
 
 onMounted(async () => {
   try {
