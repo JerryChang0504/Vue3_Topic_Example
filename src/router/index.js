@@ -32,10 +32,15 @@ const routes = [
     name: 'EditProduct',
     component: () => import('@/views/products/EditProduct.vue'),
   },
-    {
+  {
     path: '/settings/options',
     name: 'OptionsManage',
     component: () => import('@/views/settings/OptionsManage.vue'),
+  },
+  {
+    path: '/settings/add',
+    name: 'AddOption',
+    component: () => import('@/views/settings/AddOption.vue'),
   },
   {
     path: '/checkout',
