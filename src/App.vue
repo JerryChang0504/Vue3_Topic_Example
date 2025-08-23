@@ -65,7 +65,8 @@ const categories = [
 .layout {
   display: flex;
   min-height: 100vh;
-  background-color: #f5f7fa; /* 整體背景 */
+  background-color: #f5f7fa;
+  /* 整體背景 */
 }
 
 /* 側邊欄 */
