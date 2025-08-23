@@ -21,14 +21,17 @@
         </el-select>
       </div>
     </div>
-    <el-table :data="tableData" style="width: 100%">
+    <el-table :data="filteredProducts" style="width: 100%">
       <el-table-column prop="id" label="ID" />
       <el-table-column prop="listName" label="分類名稱" width="180" />
       <el-table-column prop="key" label="選項名稱" />
       <el-table-column prop="value" label="選項值" />
       <el-table-column prop="sortOrder" label="排序" />
       <el-table-column prop="isActive" label="啟用狀態">
-        <template #default="{ row }"> {{ row.isActive === true ? '啟用' : '停用' }} </template>
+        <template #default="{ row }">
+          <el-icon v-if="row.isActive" style="color: var(--el-color-success)"><Open /></el-icon>
+          <el-icon v-else style="color: var(--el-color-danger)"><Close /></el-icon>
+        </template>
       </el-table-column>
       <el-table-column prop="description" label="描述" />
     </el-table>
@@ -36,24 +39,29 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import api from '@/service/api'
 import { ElMessage } from 'element-plus'
-
+import { Open, Close } from '@element-plus/icons-vue'
 const tableData = ref([])
+const categories = ref([])
+const selectedCategory = ref('')
+
+const filteredProducts = computed(() => {
+  return selectedCategory.value
+    ? tableData.value.filter((p) => p.listName === selectedCategory.value)
+    : tableData.value
+})
 
 onMounted(async () => {
   try {
     const res = await api.getOptions()
-    console.log('🚀 ~ res:', res)
     if (res.code === '0000') {
       tableData.value = res.result
-      //   categories.value = [...new Set(products.value.map((p) => p.category))]
+      categories.value = [...new Set(tableData.value.map((p) => p.listName))]
     }
   } catch (err) {
     ElMessage.error('載入商品失敗')
-  } finally {
-    isLoading.value = false
   }
 })
 </script>
