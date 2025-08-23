@@ -1,4 +1,4 @@
-import CategoryPage from '@/navigation/sub/CategoryPage.vue'
+import CategoryPage from '@/Navigation/sub/CategoryPage.vue'
 import Storage, { TOKEN_KEY } from '@/utils/storageUtil'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -31,6 +31,11 @@ const routes = [
     path: '/products/edit/:id',
     name: 'EditProduct',
     component: () => import('@/views/products/EditProduct.vue'),
+  },
+   {
+    path: '/settings/options',
+    name: 'OptionsManage',
+    component: () => import('@/views/settings/OptionsManage.vue'),
   },
   {
     path: '/checkout',

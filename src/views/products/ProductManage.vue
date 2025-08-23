@@ -100,6 +100,12 @@ const deleteProduct = async (productId) => {
     if (res.code === '0000') {
       ElMessage.success('商品刪除成功！')
       // products.value = products.value.filter((p) => p.id !== productId)
+
+      //更新該筆資料
+      const index = products.value.findIndex((p) => p.id === res.result.id)
+      if (index !== -1) {
+        products.value.splice(index, 1, res.result)
+      }
     }
   } catch (err) {
     if (err !== 'cancel') {
