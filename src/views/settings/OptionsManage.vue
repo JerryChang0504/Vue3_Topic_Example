@@ -3,7 +3,7 @@
     <div class="header">
       <h2 class="title">選項管理</h2>
       <div class="header-actions">
-        <el-button @click="goTo('AddProduct')" type="primary"> + 新增項目 </el-button>
+        <el-button @click="goTo('AddOption')" type="primary"> + 新增項目 </el-button>
 
         <el-select v-model="selectedCategory" placeholder="選擇分類" clearable class="select-category">
           <el-option label="全部" value="" />
@@ -37,6 +37,9 @@ import { ref, onMounted, computed } from 'vue'
 import api from '@/service/api'
 import { ElMessage } from 'element-plus'
 import { Open, Close } from '@element-plus/icons-vue'
+import { useNavigation } from '@/composables/useNavigation'
+const { goTo } = useNavigation()
+
 const tableData = ref([])
 const categories = ref([])
 const selectedCategory = ref('')
