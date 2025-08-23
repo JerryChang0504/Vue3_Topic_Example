@@ -33,7 +33,7 @@ const api = {
   // 取得產品管理列表
   getManageProducts: () => apiService.get(API_ROUTES.PRODUCT_MANAGE_LIST),
 
-   // 刪除產品
+  // 刪除產品
   deleteProduct: (id) => apiService.put(API_ROUTES.PRODUCT_DELETE(id)),
 }
 
