@@ -4,7 +4,6 @@
   </div>
 </template>
 <script setup>
-import { ref } from 'vue'
 import AdCarousel from '@/views/AdCarousel.vue'
 
 const adBanners = [
