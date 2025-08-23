@@ -1,5 +1,5 @@
 <script setup>
-import { Coffee, Cpu, Flag, Monitor, Suitcase } from '@element-plus/icons-vue'
+import { Coffee, Cpu, Flag, Monitor, Suitcase, Setting } from '@element-plus/icons-vue'
 import Breadcrumb from './navigation/Breadcrumb.vue'
 import CategorySidebar from './navigation/CategorySidebar.vue'
 import TopBar from './navigation/TopBar.vue'
@@ -15,6 +15,14 @@ const categories = [
       { name: 'list', label: '商品管理', icon: Cpu },
     ],
   },
+   {
+    name: 'settings',
+    label: '管理相關',
+    icon: Setting,
+    clickable: false,
+    subs: [{ name: 'options', label: '選項管理', icon: Cpu }],
+  },
+
   {
     name: 'life',
     label: '生活類',
