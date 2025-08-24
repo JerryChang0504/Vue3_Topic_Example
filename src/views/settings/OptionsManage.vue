@@ -3,7 +3,7 @@
     <div class="header">
       <h2 class="title">選項管理</h2>
       <div class="header-actions">
-        <el-button @click="goTo('AddOption')" type="primary"> + 新增項目 </el-button>
+        <el-button @click="startAddMode" type="primary"> + 新增項目 </el-button>
 
         <el-select
           v-model="selectedCategory"
@@ -21,13 +21,22 @@
         </el-select>
       </div>
     </div>
+
+    <OptionFrom
+      v-if="showOptionFrom"
+      :model="optionFromModel"
+      :option="currentOption"
+      @refresh="handleRefresh"
+      @cancel="canceloption"
+    />
+
     <el-table :data="filteredProducts" style="width: 100%">
-      <el-table-column prop="id" label="ID" />
+      <el-table-column prop="id" label="ID" sortable />
       <el-table-column prop="listName" label="分類名稱" width="180" />
       <el-table-column prop="key" label="選項名稱" />
       <el-table-column prop="value" label="選項值" />
-      <el-table-column prop="sortOrder" label="排序" />
-      <el-table-column prop="isActive" label="啟用狀態">
+      <el-table-column prop="sortOrder" label="排序" sortable />
+      <el-table-column prop="isActive" label="啟用狀態" sortable>
         <template #default="{ row }">
           <el-icon v-if="row.isActive" style="color: var(--el-color-success)"><Open /></el-icon>
           <el-icon v-else style="color: var(--el-color-danger)"><Close /></el-icon>
@@ -36,7 +45,7 @@
       <el-table-column prop="description" label="描述" />
       <el-table-column label="操作" width="180" fixed="right">
         <template #default="{ row }">
-          <el-button size="small" type="primary" @click="editOption(row.id)"> 編輯 </el-button>
+          <el-button size="small" type="primary" @click="editOption(row)"> 編輯 </el-button>
           <el-button size="small" type="danger" @click="deleteOption(row.id)"> 刪除 </el-button>
         </template>
       </el-table-column>
@@ -45,15 +54,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
 import api from '@/service/api'
+import { Close, Open } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Open, Close } from '@element-plus/icons-vue'
-import { useNavigation } from '@/composables/useNavigation'
-const { goTo } = useNavigation()
+import { computed, onMounted, reactive, ref } from 'vue'
+import OptionFrom from './OptionFrom.vue'
 
 const tableData = ref([])
 const categories = ref([])
+// 目前選擇分類
 const selectedCategory = ref('')
 
 const filteredProducts = computed(() => {
@@ -62,6 +71,59 @@ const filteredProducts = computed(() => {
     : tableData.value
 })
 
+// 控制是否開啟OptionFrom
+const showOptionFrom = ref(false)
+// 識別新增或編輯
+const optionFromModel = ref('')
+// 目前編輯的選項
+const currentOption = reactive({
+  id: null,
+  listName: '',
+  key: '',
+  value: '',
+  sortOrder: 0,
+  isActive: true,
+  description: '',
+})
+
+// 開啟新增模式
+const startAddMode = () => {
+  showOptionFrom.value = true
+  optionFromModel.value = 'add'
+  Object.assign(currentOption, {
+    id: null,
+    listName: '',
+    key: '',
+    value: '',
+    sortOrder: 0,
+    isActive: true,
+    description: '',
+  })
+  selectedCategory.value = ''
+}
+
+// 開啟編輯模式
+const editOption = (rowOption) => {
+  selectedCategory.value = rowOption.listName
+  Object.assign(currentOption, rowOption)
+  optionFromModel.value = 'edit'
+  showOptionFrom.value = true
+}
+
+// 刷新
+const handleRefresh = async () => {
+  showOptionFrom.value = false
+  selectedCategory.value = ''
+  await loadOptions()
+}
+
+// 取消編輯
+const canceloption = () => {
+  showOptionFrom.value = false
+  selectedCategory.value = ''
+}
+
+// 刪除選項
 const deleteOption = async (optionId) => {
   try {
     await ElMessageBox.confirm('確定要刪除這選項嗎？此操作無法復原。', '警告', {
@@ -73,12 +135,7 @@ const deleteOption = async (optionId) => {
     const res = await api.deleteOption(optionId)
     if (res.code === '0000') {
       ElMessage.success('選項刪除成功！')
-
-      //更新該筆資料
-      const index = tableData.value.findIndex((p) => p.id === res.result.id)
-      if (index !== -1) {
-        tableData.value.splice(index, 1, res.result)
-      }
+      loadOptions()
     }
   } catch (err) {
     if (err !== 'cancel') {
@@ -88,7 +145,8 @@ const deleteOption = async (optionId) => {
   }
 }
 
-onMounted(async () => {
+// 載入選項
+const loadOptions = async () => {
   try {
     const res = await api.getOptions()
     if (res.code === '0000') {
@@ -98,6 +156,10 @@ onMounted(async () => {
   } catch (err) {
     ElMessage.error('載入商品失敗')
   }
+}
+
+onMounted(() => {
+  loadOptions()
 })
 </script>
 
