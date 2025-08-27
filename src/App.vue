@@ -15,7 +15,7 @@ const categories = [
       { name: 'list', label: '商品管理', icon: Cpu },
     ],
   },
-   {
+  {
     name: 'settings',
     label: '管理相關',
     icon: Setting,
