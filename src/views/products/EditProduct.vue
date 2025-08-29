@@ -22,6 +22,22 @@
         <el-input-number v-model="form.stock" :min="0" :step="1" placeholder="請輸入庫存數量" />
       </el-form-item>
 
+      <el-form-item label="商品狀態" prop="status">
+        <el-select v-model="form.states" placeholder="請選擇狀態">
+          <el-option
+            v-for="(status, index) in statusOptions"
+            :key="index"
+            :label="status.label"
+            :value="status.value"
+          />
+        </el-select>
+      </el-form-item>
+
+      <!-- 使用 InputSelect 來顯示狀態-->
+      <!-- <el-form-item label="商品狀態" prop="status">
+        <InputSelect v-model="form.states" :options="statusOptions" placeholder="請選擇狀態" />
+      </el-form-item> -->
+
       <el-form-item label="描述">
         <el-input
           v-model="form.description"
@@ -51,10 +67,10 @@
 import { useNavigation } from '@/composables/useNavigation'
 import api from '@/service/api'
 import { ElMessage } from 'element-plus'
-import { onMounted, reactive, ref } from 'vue'
+import { inject, onMounted, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
 const productId = ref(null) // 新增一個 ref 來儲存 id
-
+const options = inject('options')
 const route = useRoute()
 const { goTo } = useNavigation()
 const formRef = ref()
@@ -63,10 +79,12 @@ const form = reactive({
   category: '',
   price: 0,
   stock: 0,
+  states: '',
   description: '',
   imageBase64: '', // 改成 Base64 字串
 })
 const imagePreview = ref(null)
+const statusOptions = ref([])
 
 // 編輯模式的驗證規則 (圖片非必填)
 const rules = {
@@ -170,13 +188,21 @@ onMounted(async () => {
   productId.value = route.params?.id
   if (productId.value) {
     try {
-      const res = await api.getProductById(productId.value)
-      if (res.code === '0000') {
+      // 載入商品狀態選項 必須優先載入不然下拉選單無法對應到值
+      await api
+        .getOptionsByListName('order_status')
+        .then((res) => (statusOptions.value = res.result))
+
+      // 採用Inject方式取得options
+      // statusOptions.value = getOptions(options, 'order_status')
+
+      // 載入商品明細
+      await api.getProductById(productId.value).then((res) => {
         const product = res.result
         // 載入資料到表單
         Object.assign(form, product)
         imagePreview.value = product.imageBase64
-      }
+      })
     } catch (error) {
       ElMessage.error('載入商品資料失敗')
     }

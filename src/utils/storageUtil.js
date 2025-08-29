@@ -32,5 +32,6 @@ const Storage = {
 export const CART_KEY = 'shopping_cart'
 export const USER_KEY = 'username'
 export const TOKEN_KEY = 'token'
+export const OPTIONS_KEY = 'optionsCache'
 
 export default Storage
