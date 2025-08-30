@@ -22,6 +22,17 @@
         <el-input-number v-model="form.stock" :min="0" :step="1" placeholder="請輸入庫存數量" />
       </el-form-item>
 
+      <el-form-item label="商品狀態" prop="states">
+        <el-select v-model="form.states" placeholder="請選擇分類">
+          <el-option
+            v-for="(state, index) in states"
+            :key="index"
+            :label="state.key"
+            :value="state.value"
+          />
+        </el-select>
+      </el-form-item>
+
       <el-form-item label="描述">
         <el-input
           v-model="form.description"
@@ -63,10 +74,17 @@ const form = reactive({
   category: '',
   price: 0,
   stock: 0,
+  states: '',
   description: '',
   imageBase64: '', // 改成 Base64 字串
 })
 const imagePreview = ref(null)
+
+const states = ref([
+  { key: '刪除', value: '0' },
+  { key: '停售', value: '1' },
+  { key: '銷售中', value: '2' },
+])
 
 // 編輯模式的驗證規則 (圖片非必填)
 const rules = {
