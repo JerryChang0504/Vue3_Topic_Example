@@ -48,6 +48,8 @@
 
 <script setup>
 import { ref, reactive, watch } from 'vue'
+import api from '@/service/api'
+import { ElMessage } from 'element-plus'
 
 const props = defineProps({
   option: {
@@ -63,6 +65,7 @@ const props = defineProps({
 const emits = defineEmits(['submit', 'close'])
 
 const optionFormRef = ref(null)
+
 // 表單資料，使用 reactive 創建響應式物件
 const optionForm = reactive({
   listName: '',
@@ -110,26 +113,25 @@ const submitForm = async (formEl) => {
     }
 
     try {
-      if (mode.value === 'add') {
+      if (props.mode === 'add') {
         await api.addOption(optionForm)
         ElMessage({
           message: '選項新增成功！',
           type: 'success',
         })
-        showAddOptionForm.value = false
+        emits('submit')
       } else {
         await api.updateOption(optionForm.id, optionForm)
         ElMessage({
           message: '選項更新成功！',
           type: 'success',
         })
-        showAddOptionForm.value = false
+        emits('submit')
       }
-      await loadOptions()
       // optionFormRef.value.resetFields()
     } catch (error) {
       ElMessage({
-        message: `選項${mode.value === 'add' ? '新增' : '更新'}失敗 : ${error}`,
+        message: `選項${props.mode === 'add' ? '新增' : '更新'}失敗 : ${error}`,
         type: 'error',
       })
     }

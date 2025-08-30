@@ -26,6 +26,7 @@
       v-if="showAddOptionForm"
       :option="optionForm"
       :mode="mode"
+      @submit="handlesubmit()"
       @close="handleClose()"
     />
 
@@ -34,7 +35,7 @@
       <el-table-column prop="listName" label="分類名稱" width="180" />
       <el-table-column prop="key" label="選項名稱" />
       <el-table-column prop="value" label="選項值" />
-      <el-table-column prop="sortOrder" label="排序" />
+      <el-table-column prop="sortOrder" label="排序" sortable />
       <el-table-column prop="isActive" label="啟用狀態">
         <template #default="{ row }">
           <el-icon v-if="row.isActive" style="color: var(--el-color-success)"><Open /></el-icon>
@@ -93,8 +94,15 @@ const editOption = (option) => {
   selectedCategory.value = option.listName
 }
 
+const handlesubmit = () => {
+  showAddOptionForm.value = false
+  loadOptions()
+  selectedCategory.value = ''
+}
+
 const handleClose = () => {
   showAddOptionForm.value = false
+  selectedCategory.value = ''
 }
 
 const deleteOption = async (optionId) => {
