@@ -3,7 +3,17 @@
     <div class="header">
       <h2 class="title">選項管理</h2>
       <div class="header-actions">
-        <el-button @click="showAddOptionForm = true" type="primary"> + 新增項目 </el-button>
+        <el-button
+          @click="
+            () => {
+              showAddOptionForm = true
+              mode = 'add'
+            }
+          "
+          type="primary"
+        >
+          + 新增項目
+        </el-button>
 
         <el-select
           v-model="selectedCategory"
@@ -23,7 +33,7 @@
     </div>
 
     <div class="add-option-container" v-if="showAddOptionForm">
-      <h2>新增選項</h2>
+      <h2>{{ mode === 'add' ? '新增選項' : '編輯選項' }}</h2>
       <el-form
         ref="optionFormRef"
         :model="optionForm"
@@ -61,7 +71,9 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="submitForm(optionFormRef)"> 提交 </el-button>
+          <el-button type="primary" @click="submitForm(optionFormRef)">
+            {{ mode === 'add' ? '新增' : '更新' }}
+          </el-button>
           <el-button @click="resetForm(optionFormRef)"> 重置 </el-button>
           <el-button type="success" @click="showAddOptionForm = false">關閉</el-button>
         </el-form-item>
@@ -83,7 +95,7 @@
       <el-table-column prop="description" label="描述" />
       <el-table-column label="操作" width="180" fixed="right">
         <template #default="{ row }">
-          <el-button size="small" type="primary" @click="editOption(row.id)"> 編輯 </el-button>
+          <el-button size="small" type="primary" @click="editOption(row)"> 編輯 </el-button>
           <el-button size="small" type="danger" @click="deleteOption(row.id)"> 刪除 </el-button>
         </template>
       </el-table-column>
@@ -114,6 +126,8 @@ const optionForm = reactive({
   isActive: true,
   description: '',
 })
+const mode = ref('')
+
 // 表單驗證規則
 const rules = reactive({
   listName: [
@@ -174,6 +188,12 @@ const submitForm = async (formEl) => {
 const resetForm = (formEl) => {
   if (!formEl) return
   formEl.resetFields() // 重置所有表單項
+}
+
+const editOption = (option) => {
+  Object.assign(optionForm, { ...option, name: option.key })
+  showAddOptionForm.value = true
+  mode.value = 'edit'
 }
 
 const deleteOption = async (optionId) => {
