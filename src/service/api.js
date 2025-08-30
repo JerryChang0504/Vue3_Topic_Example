@@ -42,7 +42,7 @@ const api = {
 
   addOption: (data) => apiService.post(API_ROUTES.OPTIONS_ADD, data),
   updateOption: (id, data) => apiService.put(API_ROUTES.OPTIONS_UPDATE(id), data),
-  deleteOption: (id) => apiService.put(API_ROUTES.OPTIONS_DELETE(id)),
+  deleteOption: (id) => apiService.delete(API_ROUTES.OPTIONS_DELETE(id)),
 
 }
 
