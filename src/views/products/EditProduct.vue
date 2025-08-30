@@ -23,11 +23,11 @@
       </el-form-item>
 
       <el-form-item label="商品狀態" prop="states">
-        <el-select v-model="form.states" placeholder="請選擇分類">
+        <el-select v-model="form.states" placeholder="請選擇狀態">
           <el-option
             v-for="(state, index) in states"
             :key="index"
-            :label="state.key"
+            :label="state.label"
             :value="state.value"
           />
         </el-select>
@@ -80,11 +80,7 @@ const form = reactive({
 })
 const imagePreview = ref(null)
 
-const states = ref([
-  { key: '刪除', value: '0' },
-  { key: '停售', value: '1' },
-  { key: '銷售中', value: '2' },
-])
+const states = ref([])
 
 // 編輯模式的驗證規則 (圖片非必填)
 const rules = {
@@ -169,6 +165,7 @@ function resetForm() {
   form.category = ''
   form.price = null
   form.stock = 0
+  form.states = ''
   form.description = ''
   form.imageBase64 = ''
   imagePreview.value = null
@@ -188,6 +185,8 @@ onMounted(async () => {
   productId.value = route.params?.id
   if (productId.value) {
     try {
+      await api.getOptionsByListName('order_status').then((res) => (states.value = res.result))
+
       const res = await api.getProductById(productId.value)
       if (res.code === '0000') {
         const product = res.result
