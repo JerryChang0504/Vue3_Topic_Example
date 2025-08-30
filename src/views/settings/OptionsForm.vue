@@ -41,10 +41,9 @@
         {{ mode === 'add' ? '新增' : '更新' }}
       </el-button>
       <el-button @click="resetForm(optionFormRef)"> 重置 </el-button>
-      <el-button type="success" @click="showAddOptionForm = false">關閉</el-button>
+      <el-button type="success" @click="closeForm()">關閉</el-button>
     </el-form-item>
   </el-form>
-  <!-- </div> -->
 </template>
 
 <script setup>
@@ -61,6 +60,8 @@ const props = defineProps({
   },
 })
 
+const emits = defineEmits(['submit', 'close'])
+
 const optionFormRef = ref(null)
 // 表單資料，使用 reactive 創建響應式物件
 const optionForm = reactive({
@@ -71,8 +72,6 @@ const optionForm = reactive({
   isActive: true,
   description: '',
 })
-
-const mode = ref('')
 
 // 表單驗證規則
 const rules = reactive({
@@ -89,7 +88,6 @@ watch(
   () => props.option,
   (newOption) => {
     Object.assign(optionForm, newOption)
-    mode.value = 'edit'
   },
   { deep: true, immediate: true },
 )
@@ -136,6 +134,16 @@ const submitForm = async (formEl) => {
       })
     }
   })
+}
+
+// 重置表單的函式
+const resetForm = (formEl) => {
+  if (!formEl) return
+  formEl.resetFields() // 重置所有表單項
+}
+
+const closeForm = () => {
+  emits('close')
 }
 </script>
 

@@ -22,7 +22,12 @@
       </div>
     </div>
 
-    <OptionsForm v-if="showAddOptionForm" :option="optionForm" :mode="mode" />
+    <OptionsForm
+      v-if="showAddOptionForm"
+      :option="optionForm"
+      :mode="mode"
+      @close="handleClose()"
+    />
 
     <el-table :data="filteredProducts" style="width: 100%">
       <el-table-column prop="id" label="ID" />
@@ -48,7 +53,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, computed } from 'vue'
+import { ref, reactive, onMounted, computed, handleError } from 'vue'
 import api from '@/service/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Open, Close } from '@element-plus/icons-vue'
@@ -70,14 +75,15 @@ const filteredProducts = computed(() => {
 
 const addOption = () => {
   showAddOptionForm.value = true
-  Object.assign(optionForm, {})
+  Object.assign(optionForm, {
+    listName: '',
+    name: '',
+    value: '',
+    sortOrder: 0,
+    isActive: true,
+    description: '',
+  })
   mode.value = 'add'
-}
-
-// 重置表單的函式
-const resetForm = (formEl) => {
-  if (!formEl) return
-  formEl.resetFields() // 重置所有表單項
 }
 
 const editOption = (option) => {
@@ -85,6 +91,10 @@ const editOption = (option) => {
   showAddOptionForm.value = true
   mode.value = 'edit'
   selectedCategory.value = option.listName
+}
+
+const handleClose = () => {
+  showAddOptionForm.value = false
 }
 
 const deleteOption = async (optionId) => {
