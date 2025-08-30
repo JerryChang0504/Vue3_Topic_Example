@@ -191,10 +191,11 @@ const resetForm = (formEl) => {
   formEl.resetFields() // 重置所有表單項
 }
 
-const editOption = async (option) => {
+const editOption = (option) => {
   Object.assign(optionForm, { ...option, name: option.key })
   showAddOptionForm.value = true
   mode.value = 'edit'
+  selectedCategory.value = option.listName
 }
 
 const deleteOption = async (optionId) => {
