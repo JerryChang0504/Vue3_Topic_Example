@@ -5,32 +5,16 @@
       <div class="header-actions">
         <el-button @click="addOption()" type="primary"> + 新增項目 </el-button>
 
-        <el-select
-          v-model="selectedCategory"
-          placeholder="選擇分類"
-          clearable
-          class="select-category"
-        >
+        <el-select v-model="selectedCategory" placeholder="選擇分類" clearable class="select-category">
           <el-option label="全部" value="" />
-          <el-option
-            v-for="category in categories"
-            :key="category"
-            :label="category"
-            :value="category"
-          />
+          <el-option v-for="category in categories" :key="category" :label="category" :value="category" />
         </el-select>
       </div>
     </div>
 
     <div class="add-option-container" v-if="showAddOptionForm">
       <h2>{{ mode === 'add' ? '新增選項' : '編輯選項' }}</h2>
-      <el-form
-        ref="optionFormRef"
-        :model="optionForm"
-        :rules="rules"
-        label-width="120px"
-        class="option-form"
-      >
+      <el-form ref="optionFormRef" :model="optionForm" :rules="rules" label-width="120px" class="option-form">
         <el-form-item label="分類名稱" prop="listName">
           <el-input v-model="optionForm.listName" placeholder="例如: order_status" />
         </el-form-item>
@@ -52,12 +36,7 @@
         </el-form-item>
 
         <el-form-item label="描述" prop="description">
-          <el-input
-            v-model="optionForm.description"
-            type="textarea"
-            :rows="2"
-            placeholder="輸入選項描述"
-          />
+          <el-input v-model="optionForm.description" type="textarea" :rows="2" placeholder="輸入選項描述" />
         </el-form-item>
 
         <el-form-item>
@@ -78,8 +57,12 @@
       <el-table-column prop="sortOrder" label="排序" />
       <el-table-column prop="isActive" label="啟用狀態">
         <template #default="{ row }">
-          <el-icon v-if="row.isActive" style="color: var(--el-color-success)"><Open /></el-icon>
-          <el-icon v-else style="color: var(--el-color-danger)"><Close /></el-icon>
+          <el-icon v-if="row.isActive" style="color: var(--el-color-success)">
+            <Open />
+          </el-icon>
+          <el-icon v-else style="color: var(--el-color-danger)">
+            <Close />
+          </el-icon>
         </template>
       </el-table-column>
       <el-table-column prop="description" label="描述" />
@@ -205,13 +188,6 @@ const deleteOption = async (optionId) => {
       cancelButtonText: '取消',
       type: 'warning',
     })
-
-    const res = await api.deleteOption(optionId)
-    if (res.code === '0000') {
-      ElMessage.success('選項刪除成功！')
-
-      loadOptions()
-    }
   } catch (err) {
     if (err !== 'cancel') {
       console.error('刪除商品失敗:', err)
