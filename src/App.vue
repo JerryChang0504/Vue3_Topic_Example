@@ -2,7 +2,7 @@
 import { Coffee, Cpu, Flag, Monitor, Suitcase, InfoFilled, List, Odometer } from '@element-plus/icons-vue'
 import Breadcrumb from './Navigation/Breadcrumb.vue'
 import CategorySidebar from './Navigation/CategorySidebar.vue'
-import TopBar from './Navigation/TopBar.vue's
+import TopBar from './Navigation/TopBar.vue'
 
 const categories = [
   {

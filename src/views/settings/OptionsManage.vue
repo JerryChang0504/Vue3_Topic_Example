@@ -13,7 +13,7 @@
       </div>
     </div>
 
-    <div class="add-option-container" v-if="showAddOptionForm">
+    <!-- <div class="add-option-container" v-if="showAddOptionForm">
       <h2>{{ mode === 'add' ? '新增選項' : '編輯選項' }}</h2>
       <el-form ref="optionFormRef" :model="optionForm" :rules="rules" label-width="120px" class="option-form">
         <el-form-item label="分類名稱" prop="listName">
@@ -46,7 +46,9 @@
           <el-button type="success" @click="showAddOptionForm = false">關閉</el-button>
         </el-form-item>
       </el-form>
-    </div>
+    </div> -->
+
+    <optionForm v-if="showAddOptionForm" :option="optionForm" :mode="mode" @close="handleClose()" />
 
     <el-table :data="filteredProducts" style="width: 100%">
       <el-table-column prop="id" label="ID" />
@@ -82,6 +84,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { Open, Close } from '@element-plus/icons-vue'
 import { useNavigation } from '@/composables/useNavigation'
 import { add } from 'lodash'
+import optionForm from './OPtionsForm.vue'
 const { goTo } = useNavigation()
 
 const mode = ref('add')
@@ -91,15 +94,15 @@ const selectedCategory = ref('')
 // 表單的 ref，用於存取表單實例並呼叫其方法
 const optionFormRef = ref(null)
 const showAddOptionForm = ref(false)
-// 表單資料，使用 reactive 創建響應式物件
-const optionForm = reactive({
-  listName: '',
-  name: '',
-  value: '',
-  sortOrder: 0,
-  isActive: true,
-  description: '',
-})
+// // 表單資料，使用 reactive 創建響應式物件
+// const optionForm = reactive({
+//   listName: '',
+//   name: '',
+//   value: '',
+//   sortOrder: 0,
+//   isActive: true,
+//   description: '',
+// })
 // 表單驗證規則
 const rules = reactive({
   listName: [
@@ -117,53 +120,73 @@ const filteredProducts = computed(() => {
     : tableData.value
 })
 
-// 提交表單的函式
-const submitForm = async (formEl) => {
-  // 如果表單實例不存在，則直接返回
-  if (!formEl) return
-
-  // 觸發表單驗證
-  await formEl.validate(async (valid, fields) => {
-    if (!valid) {
-      // 驗證失敗
-      console.log('表單驗證失敗！', fields)
-      ElMessage({
-        message: '請檢查表單內容是否有誤。',
-        type: 'error',
-      })
-      return
-    }
-
-    try {
-      await api.addOption(optionForm)
-      ElMessage({
-        message: '選項新增成功！',
-        type: 'success',
-      })
-      await loadOptions()
-
-      optionFormRef.value.resetFields()
-    } catch (error) {
-      ElMessage({
-        message: `選項新增失敗 : ${error}`,
-        type: 'error',
-      })
-    }
-  })
+const handleClose = () => {
+  showAddOptionForm.value = false
 }
+
+// // 提交表單的函式
+// const submitForm = async (formEl) => {
+//   // 如果表單實例不存在，則直接返回
+//   if (!formEl) return
+
+//   // 觸發表單驗證
+//   await formEl.validate(async (valid, fields) => {
+//     if (!valid) {
+//       // 驗證失敗
+//       console.log('表單驗證失敗！', fields)
+//       ElMessage({
+//         message: '請檢查表單內容是否有誤。',
+//         type: 'error',
+//       })
+//       return
+//     }
+
+//     try {
+//       if (mode.value === 'edit') {
+//         await api.updateOption(optionForm.id, optionForm)
+//         ElMessage({
+//           message: '選項編輯成功！',
+//           type: 'success',
+//         })
+//       } else if (mode.value === 'add') {
+//         await api.addOption(optionForm)
+//         ElMessage({
+//           message: '選項新增成功！',
+//           type: 'success',
+//         })
+//       }
+
+//       await loadOptions()
+//       showAddOptionForm.value = false
+//       // optionFormRef.value.resetFields()
+//     } catch (error) {
+//       ElMessage({
+//         message: `選項${mode.value === 'add' ? '新增' : '編輯'}失敗 : ${error}`,
+//         type: 'error',
+//       })
+//     }
+//   })
+// }
 
 // 新增選項
 const addOption = () => {
   showAddOptionForm.value = true
-  Object.assign(optionForm, {})
+  Object.assign(optionForm, {
+    listName: '',
+    name: '',
+    value: '',
+    sortOrder: 0,
+    isActive: true,
+    description: '',
+  })
   mode.value = 'add'
 }
 
-// 重置表單的函式
-const resetForm = (formEl) => {
-  if (!formEl) return
-  formEl.resetFields() // 重置所有表單項
-}
+// // 重置表單的函式
+// const resetForm = (formEl) => {
+//   if (!formEl) return
+//   formEl.resetFields() // 重置所有表單項
+// }
 
 // 編輯選項
 const editOption = (option) => {
@@ -190,6 +213,7 @@ const deleteOption = async (optionId) => {
       ElMessage.success('選項刪除成功！')
 
       loadOptions()
+      showAddOptionForm.value = false
     }
   } catch (err) {
     if (err !== 'cancel') {
