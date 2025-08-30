@@ -1,8 +1,8 @@
 <template>
     <div class="add-option-container">
-        <h2>新增選項</h2>
+        <h2>{{ mode === 'add' ? '新增選項' : '編輯選項' }}</h2>
         <el-form ref="optionFormRef" :model="optionForm" :rules="rules" label-width="120px" class="option-form">
-            <el-form-item label="列表名稱" prop="listName">
+            <el-form-item label="分類名稱" prop="listName">
                 <el-input v-model="optionForm.listName" placeholder="例如: order_status" />
             </el-form-item>
 
@@ -27,21 +27,31 @@
             </el-form-item>
 
             <el-form-item>
-                <el-button type="primary" @click="submitForm(optionFormRef)"> 提交 </el-button>
+                <el-button type="primary" @click="submitForm(optionFormRef)">
+                    {{ mode === 'add' ? '新增' : '更新' }}
+                </el-button>
                 <el-button @click="resetForm(optionFormRef)"> 重置 </el-button>
+                <el-button type="success" @click="showAddOptionForm = false">關閉</el-button>
             </el-form-item>
         </el-form>
     </div>
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
-import { ElMessage } from 'element-plus'
-import api from '@/service/api'
+import { ref, reactive, watch } from 'vue'
 
-// 表單的 ref，用於存取表單實例並呼叫其方法
+const props = defineProps({
+    option: {
+        type: Object,
+        required: true,
+    },
+    mode: {
+        type: String,
+        required: true,
+    },
+})
+
 const optionFormRef = ref(null)
-
 // 表單資料，使用 reactive 創建響應式物件
 const optionForm = reactive({
     listName: '',
@@ -51,6 +61,8 @@ const optionForm = reactive({
     isActive: true,
     description: '',
 })
+
+const mode = ref('')
 
 // 表單驗證規則
 const rules = reactive({
@@ -62,6 +74,15 @@ const rules = reactive({
     value: [{ required: true, message: '請輸入選項值', trigger: 'blur' }],
     sortOrder: [{ required: true, message: '請輸入排序值', trigger: 'change' }],
 })
+
+watch(
+    () => props.option,
+    (newOption) => {
+        Object.assign(optionForm, newOption)
+        mode.value = 'edit'
+    },
+    { deep: true, immediate: true },
+)
 
 // 提交表單的函式
 const submitForm = async (formEl) => {
@@ -106,31 +127,7 @@ const submitForm = async (formEl) => {
         }
     })
 }
-
-// 重置表單的函式
-const resetForm = (formEl) => {
-    if (!formEl) return
-    formEl.resetFields() // 重置所有表單項
-}
 </script>
 
-<style scoped>
-.add-option-container {
-    max-width: 600px;
-    margin: 40px auto;
-    padding: 30px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
 
-.add-option-container h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #333;
-}
-
-.option-form .el-form-item {
-    margin-bottom: 24px;
-}
-</style>
+<style scoped></style>
