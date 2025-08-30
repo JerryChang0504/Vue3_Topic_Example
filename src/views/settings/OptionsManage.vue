@@ -3,17 +3,7 @@
     <div class="header">
       <h2 class="title">選項管理</h2>
       <div class="header-actions">
-        <el-button
-          @click="
-            () => {
-              showAddOptionForm = true
-              mode = 'add'
-            }
-          "
-          type="primary"
-        >
-          + 新增項目
-        </el-button>
+        <el-button @click="addOption()" type="primary"> + 新增項目 </el-button>
 
         <el-select
           v-model="selectedCategory"
@@ -41,7 +31,7 @@
         label-width="120px"
         class="option-form"
       >
-        <el-form-item label="列表名稱" prop="listName">
+        <el-form-item label="分類名稱" prop="listName">
           <el-input v-model="optionForm.listName" placeholder="例如: order_status" />
         </el-form-item>
 
@@ -145,13 +135,19 @@ const filteredProducts = computed(() => {
     : tableData.value
 })
 
+const addOption = () => {
+  showAddOptionForm.value = true
+  Object.assign(optionForm, {})
+  mode.value = 'add'
+}
+
 // 提交表單的函式
 const submitForm = async (formEl) => {
   // 如果表單實例不存在，則直接返回
   if (!formEl) return
 
   // 觸發表單驗證
-  await formEl.validate((valid, fields) => {
+  await formEl.validate(async (valid, fields) => {
     if (!valid) {
       // 驗證失敗
       console.log('表單驗證失敗！', fields)
@@ -163,17 +159,12 @@ const submitForm = async (formEl) => {
     }
 
     try {
-      api.addOption(optionForm)
+      await api.addOption(optionForm)
       ElMessage({
         message: '選項新增成功！',
         type: 'success',
       })
-      const res = api.getOptions()
-      if (res.code === '0000') {
-        tableData.value = res.result
-        categories.value = [...new Set(tableData.value.map((p) => p.listName))]
-      }
-
+      await loadOptions()
       optionFormRef.value.resetFields()
     } catch (error) {
       ElMessage({
@@ -190,9 +181,15 @@ const resetForm = (formEl) => {
   formEl.resetFields() // 重置所有表單項
 }
 
-const editOption = (option) => {
+const editOption = async (option) => {
   Object.assign(optionForm, { ...option, name: option.key })
   showAddOptionForm.value = true
+  const res = await api.updateOption(optionForm.id, optionForm)
+  if (res.code === '0000') {
+    ElMessage.success('選項更新成功！')
+  } else {
+    ElMessage.error('選項更新失敗！')
+  }
   mode.value = 'edit'
 }
 
@@ -208,11 +205,7 @@ const deleteOption = async (optionId) => {
     if (res.code === '0000') {
       ElMessage.success('選項刪除成功！')
 
-      //更新該筆資料
-      const index = tableData.value.findIndex((p) => p.id === res.result.id)
-      if (index !== -1) {
-        tableData.value.splice(index, 1, res.result)
-      }
+      loadOptions()
     }
   } catch (err) {
     if (err !== 'cancel') {
@@ -222,7 +215,8 @@ const deleteOption = async (optionId) => {
   }
 }
 
-onMounted(async () => {
+// 載入選項
+const loadOptions = async () => {
   try {
     const res = await api.getOptions()
     if (res.code === '0000') {
@@ -232,6 +226,10 @@ onMounted(async () => {
   } catch (err) {
     ElMessage.error('載入商品失敗')
   }
+}
+
+onMounted(async () => {
+  loadOptions()
 })
 </script>
 

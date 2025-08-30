@@ -42,6 +42,9 @@ const api = {
   // 新增選項
   addOption: (data) => apiService.post(API_ROUTES.OPTIONS_ADD, data),
 
+  // 更新選項
+  updateOption: (id, data) => apiService.put(API_ROUTES.OPTIONS_UPDATE(id), data),
+
   // 刪除選項
   deleteOption: (id) => apiService.delete(API_ROUTES.OPTIONS_DELETE(id)),
 }
