@@ -40,6 +40,7 @@
       <el-form-item>
         <el-button type="primary" @click="submitForm(optionFormRef)"> 提交 </el-button>
         <el-button @click="resetForm(optionFormRef)"> 重置 </el-button>
+        <el-button type="success" @click="() => goBack()">返回</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -49,6 +50,9 @@
 import { reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import api from '@/service/api'
+import { useNavigation } from '@/composables/useNavigation'
+
+const { goBack } = useNavigation()
 
 // 表單的 ref，用於存取表單實例並呼叫其方法
 const optionFormRef = ref(null)
@@ -74,6 +78,12 @@ const rules = reactive({
   sortOrder: [{ required: true, message: '請輸入排序值', trigger: 'change' }],
 })
 
+// 重置表單的函式
+const resetForm = (formEl) => {
+  if (!formEl) return
+  formEl.resetFields() // 重置所有表單項
+}
+
 // 提交表單的函式
 const submitForm = async (formEl) => {
   // 如果表單實例不存在，則直接返回
@@ -81,33 +91,30 @@ const submitForm = async (formEl) => {
 
   // 觸發表單驗證
   await formEl.validate((valid, fields) => {
-    if (valid) {
-      // 驗證通過，執行提交邏輯
-      console.log('表單提交成功！')
-      console.log('提交的資料：', optionForm)
-      api.addOption(optionForm)
-
-      ElMessage({
-        message: '選項新增成功！',
-        type: 'success',
-      })
-      // 這裡可以將資料送出到後端 API
-      //例如：axios.post('/api/options', optionForm)
-    } else {
+    if (!valid) {
       // 驗證失敗
       console.log('表單驗證失敗！', fields)
       ElMessage({
         message: '請檢查表單內容是否有誤。',
         type: 'error',
       })
+      return
+    }
+
+    try {
+      api.addOption(optionForm)
+      ElMessage({
+        message: '選項新增成功！',
+        type: 'success',
+      })
+      optionFormRef.value.resetFields()
+    } catch (error) {
+      ElMessage({
+        message: `選項新增失敗 : ${error}`,
+        type: 'error',
+      })
     }
   })
-}
-
-// 重置表單的函式
-const resetForm = (formEl) => {
-  if (!formEl) return
-  formEl.resetFields() // 重置所有表單項
 }
 </script>
 
