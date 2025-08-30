@@ -1,6 +1,7 @@
 import Storage, { TOKEN_KEY } from '@/utils/storageUtil'
 import { API_ROUTES } from './apiRoutes'
 import apiService from './apiService'
+import { add } from 'lodash'
 
 const api = {
   // 註冊
@@ -38,6 +39,10 @@ const api = {
 
   // 取得選項列表
   getOptions: () => apiService.get(API_ROUTES.OPTIONS_LIST),
+
+  addOption: (data) => apiService.post(API_ROUTES.OPTIONS_ADD, data),
+  updateOption: (id, data) => apiService.put(API_ROUTES.OPTIONS_UPDATE(id), data),
+  deleteOption: (id) => apiService.put(API_ROUTES.OPTIONS_DELETE(id)),
 
 }
 
