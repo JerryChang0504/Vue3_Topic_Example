@@ -12,6 +12,7 @@
       </div>
     </div>
 
+<<<<<<< HEAD
     <div class="add-option-container" v-if="showAddOptionForm">
       <h2>{{ mode === 'add' ? '新增選項' : '編輯選項' }}</h2>
       <el-form ref="optionFormRef" :model="optionForm" :rules="rules" label-width="120px" class="option-form">
@@ -48,6 +49,9 @@
         </el-form-item>
       </el-form>
     </div>
+=======
+    <OptionsForm v-if="showAddOptionForm" :option="optionForm" :mode="mode" />
+>>>>>>> dev_Jerry
 
     <el-table :data="filteredProducts" style="width: 100%">
       <el-table-column prop="id" label="ID" />
@@ -82,36 +86,15 @@ import api from '@/service/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Open, Close } from '@element-plus/icons-vue'
 import { useNavigation } from '@/composables/useNavigation'
+import OptionsForm from './OptionsForm.vue'
 const { goTo } = useNavigation()
 
 const tableData = ref([])
 const categories = ref([])
 const selectedCategory = ref('')
-// 表單的 ref，用於存取表單實例並呼叫其方法
-const optionFormRef = ref(null)
 const showAddOptionForm = ref(false)
-// 表單資料，使用 reactive 創建響應式物件
-const optionForm = reactive({
-  listName: '',
-  name: '',
-  value: '',
-  sortOrder: 0,
-  isActive: true,
-  description: '',
-})
+const optionForm = reactive({})
 const mode = ref('')
-
-// 表單驗證規則
-const rules = reactive({
-  listName: [
-    { required: true, message: '請輸入列表名稱', trigger: 'blur' },
-    { min: 3, max: 50, message: '長度需介於 3 到 50 個字元', trigger: 'blur' },
-  ],
-  name: [{ required: true, message: '請輸入選項名稱', trigger: 'blur' }],
-  value: [{ required: true, message: '請輸入選項值', trigger: 'blur' }],
-  sortOrder: [{ required: true, message: '請輸入排序值', trigger: 'change' }],
-})
-
 const filteredProducts = computed(() => {
   return selectedCategory.value
     ? tableData.value.filter((p) => p.listName === selectedCategory.value)
@@ -122,50 +105,6 @@ const addOption = () => {
   showAddOptionForm.value = true
   Object.assign(optionForm, {})
   mode.value = 'add'
-}
-
-// 提交表單的函式
-const submitForm = async (formEl) => {
-  // 如果表單實例不存在，則直接返回
-  if (!formEl) return
-
-  // 觸發表單驗證
-  await formEl.validate(async (valid, fields) => {
-    if (!valid) {
-      // 驗證失敗
-      console.log('表單驗證失敗！', fields)
-      ElMessage({
-        message: '請檢查表單內容是否有誤。',
-        type: 'error',
-      })
-      return
-    }
-
-    try {
-      if (mode.value === 'add') {
-        await api.addOption(optionForm)
-        ElMessage({
-          message: '選項新增成功！',
-          type: 'success',
-        })
-        showAddOptionForm.value = false
-      } else {
-        await api.updateOption(optionForm.id, optionForm)
-        ElMessage({
-          message: '選項更新成功！',
-          type: 'success',
-        })
-        showAddOptionForm.value = false
-      }
-      await loadOptions()
-      // optionFormRef.value.resetFields()
-    } catch (error) {
-      ElMessage({
-        message: `選項${mode.value === 'add' ? '新增' : '更新'}失敗 : ${error}`,
-        type: 'error',
-      })
-    }
-  })
 }
 
 // 重置表單的函式
