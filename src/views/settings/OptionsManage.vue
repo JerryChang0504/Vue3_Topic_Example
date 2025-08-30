@@ -171,6 +171,7 @@ const editOption = (option) => {
   mode.value = 'edit'
   Object.assign(optionForm, { ...option, name: option.key })
   showAddOptionForm.value = true
+  selectedCategory.value = option.listName
 
 }
 

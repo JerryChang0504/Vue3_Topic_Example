@@ -37,11 +37,7 @@ const routes = [
     name: 'OptionsManage',
     component: () => import('@/views/settings/OptionsManage.vue'),
   },
-  {
-    path: '/settings/add',
-    name: 'AddOption',
-    component: () => import('@/views/settings/AddOption.vue'),
-  },
+
   {
     path: '/checkout',
     name: 'Checkout',
