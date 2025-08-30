@@ -159,16 +159,26 @@ const submitForm = async (formEl) => {
     }
 
     try {
-      await api.addOption(optionForm)
-      ElMessage({
-        message: '選項新增成功！',
-        type: 'success',
-      })
+      if (mode.value === 'add') {
+        await api.addOption(optionForm)
+        ElMessage({
+          message: '選項新增成功！',
+          type: 'success',
+        })
+        showAddOptionForm.value = false
+      } else {
+        await api.updateOption(optionForm.id, optionForm)
+        ElMessage({
+          message: '選項更新成功！',
+          type: 'success',
+        })
+        showAddOptionForm.value = false
+      }
       await loadOptions()
-      optionFormRef.value.resetFields()
+      // optionFormRef.value.resetFields()
     } catch (error) {
       ElMessage({
-        message: `選項新增失敗 : ${error}`,
+        message: `選項${mode.value === 'add' ? '新增' : '更新'}失敗 : ${error}`,
         type: 'error',
       })
     }
@@ -184,12 +194,6 @@ const resetForm = (formEl) => {
 const editOption = async (option) => {
   Object.assign(optionForm, { ...option, name: option.key })
   showAddOptionForm.value = true
-  const res = await api.updateOption(optionForm.id, optionForm)
-  if (res.code === '0000') {
-    ElMessage.success('選項更新成功！')
-  } else {
-    ElMessage.error('選項更新失敗！')
-  }
   mode.value = 'edit'
 }
 
