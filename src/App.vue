@@ -1,5 +1,5 @@
 <script setup>
-import { Coffee, Cpu, Flag, Monitor, Suitcase, Odometer } from '@element-plus/icons-vue'
+import { Coffee, Cpu, Flag, Monitor, Odometer, Suitcase } from '@element-plus/icons-vue'
 import Breadcrumb from './navigation/Breadcrumb.vue'
 import CategorySidebar from './navigation/CategorySidebar.vue'
 import TopBar from './navigation/TopBar.vue'

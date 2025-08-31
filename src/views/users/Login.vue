@@ -70,10 +70,10 @@ const rules = {
 
 // 載入記住的帳號
 onMounted(() => {
-  const rememberedUsername = Storage.get(USER_KEY)
+  const { username: rememberedUsername, rememberMe } = Storage.get(USER_KEY)
   if (rememberedUsername) {
     form.value.username = rememberedUsername
-    form.value.rememberMe = true
+    form.value.rememberMe = rememberMe
   }
 })
 
@@ -90,13 +90,16 @@ const handleLogin = async () => {
     isLogin: true,
   }
 
-  const res = await api.login(loginData)
-  const token = res.result
-  userStore.login(loginData)
-  userStore.startTokenCountdown(token)
-
-  ElMessage.success('登入成功！')
-  goHome()
+  try {
+    const res = await api.login(loginData)
+    if (res.code === '0000') {
+      userStore.login(loginData, res.result)
+      ElMessage.success('登入成功！')
+      goHome()
+    }
+  } catch (error) {
+    ElMessage.error(error.message || '登入失敗，請稍後再試')
+  }
 }
 
 const handleForgotPassword = () => {

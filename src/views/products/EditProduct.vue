@@ -194,7 +194,6 @@ onMounted(async () => {
       // await api
       //   .getOptionsByListName('order_status')
       //   .then((res) => (statusOptions.value = res.result))
-      console.log('🚀 ~ options:', options)
       // 利用Inject的options進行過濾
       statusOptions.value = getfilterOption(options, 'order_status')
 

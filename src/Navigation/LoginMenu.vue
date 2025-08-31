@@ -15,7 +15,7 @@
 
       <!-- 漢堡下拉選單 -->
       <el-dropdown>
-        <el-button type="link" class="hamburger-btn">
+        <el-button type="default" class="hamburger-btn">
           <el-icon><More /></el-icon>
         </el-button>
         <template #dropdown>
@@ -30,11 +30,12 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { More } from '@element-plus/icons-vue'
-import { useUserStore } from '@/store/userStore'
-import { storeToRefs } from 'pinia'
 import { useNavigation } from '@/composables/useNavigation'
+import { useUserStore } from '@/store/userStore'
+import Storage, { USER_KEY } from '@/utils/storageUtil'
+import { More } from '@element-plus/icons-vue'
+import { storeToRefs } from 'pinia'
+import { computed } from 'vue'
 
 const userStore = useUserStore()
 const isLogin = computed(() => !!userStore.user?.isLogin)
