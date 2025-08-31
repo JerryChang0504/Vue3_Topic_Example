@@ -37,19 +37,3 @@ export async function getAndCacheOptions() {
     return {} // 失敗時返回空物件
   }
 }
-
-/**
- * 根據 listName 獲取選項
- * @param {List<Object>} options
- * @param {String} listName
- * @returns
- */
-export function getOptions(options, listName) {
-  return options
-    .filter((o) => {
-      return o.listName === listName
-    })
-    .map((o) => {
-      return { label: o.key, value: o.value }
-    })
-}

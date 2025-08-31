@@ -9,7 +9,7 @@ import AlertBox from './components/AlertBox.vue'
 import FormatPlugin from './plugins/format' // 載入插件
 import router from './router'
 import { formatSecondsToHHMMSS } from './utils/format'
-import { getAndCacheOptions } from './utils/optionSerive'
+import { getAndCacheOptions } from './utils/optionService'
 const app = createApp(App)
 const pinia = createPinia()
 

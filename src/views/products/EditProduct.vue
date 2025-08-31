@@ -66,13 +66,15 @@
 <script setup>
 import { useNavigation } from '@/composables/useNavigation'
 import api from '@/service/api'
+import { getfilterOption } from '@/utils/OptionUtils'
 import { ElMessage } from 'element-plus'
 import { inject, onMounted, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
+
 const productId = ref(null) // 新增一個 ref 來儲存 id
-const options = inject('options')
+const options = inject('options', [])
 const route = useRoute()
-const { goTo } = useNavigation()
+const { goTo, goBack } = useNavigation()
 const formRef = ref()
 const form = reactive({
   name: '',
@@ -189,12 +191,12 @@ onMounted(async () => {
   if (productId.value) {
     try {
       // 載入商品狀態選項 必須優先載入不然下拉選單無法對應到值
-      await api
-        .getOptionsByListName('order_status')
-        .then((res) => (statusOptions.value = res.result))
-
-      // 採用Inject方式取得options
-      // statusOptions.value = getOptions(options, 'order_status')
+      // await api
+      //   .getOptionsByListName('order_status')
+      //   .then((res) => (statusOptions.value = res.result))
+      console.log('🚀 ~ options:', options)
+      // 利用Inject的options進行過濾
+      statusOptions.value = getfilterOption(options, 'order_status')
 
       // 載入商品明細
       await api.getProductById(productId.value).then((res) => {
@@ -205,6 +207,7 @@ onMounted(async () => {
       })
     } catch (error) {
       ElMessage.error('載入商品資料失敗')
+      goBack()
     }
   }
 })
