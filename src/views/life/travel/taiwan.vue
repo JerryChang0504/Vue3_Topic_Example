@@ -11,6 +11,7 @@
         :imageUrl="card.imageUrl"
         :title="card.title"
         :description="card.description"
+        :details="card.details"
         @card-clicked="handleCardClick"
       />
     </main>
@@ -30,37 +31,48 @@ const cards = ref([
   {
     imageUrl: 'https://via.placeholder.com/300x200?text=台南',
     title: '台南 - 安平古堡',
-    description: '台灣最具歷史意義的景點之一。'
+    description: '台灣最具歷史意義的景點之一。',
+    details:'安平古堡建於17世紀，是荷蘭人建立的第一個堡壘，充滿歷史故事。'
   },
   {
     imageUrl: 'https://imgs.cwgv.com.tw/books/BCB/BCB755/cover/thumb/BCB755.png',
     title: '台北 - 台北101',
-    description: '世界著名的高樓建築與都市地標。'
+    description: '世界著名的高樓建築與都市地標。',
+    details:'台北101 是台灣科技與設計的象徵，也擁有高級購物中心與觀景台。'
+
   },
   {
     imageUrl: 'https://via.placeholder.com/300x200?text=日月潭',
     title: '南投 - 日月潭',
-    description: '台灣最美的湖泊之一，風景如畫。'
+    description: '台灣最美的湖泊之一，風景如畫。',
+    details:'日月潭為天然湖泊，擁有壯麗風景與豐富原住民文化。'
+
   },
   {
     imageUrl: 'https://via.placeholder.com/300x200?text=日月潭',
     title: '墾丁 - 墾丁國家公園',
-    description: '擁有美麗的沙灘、熱帶植物和豐富的海洋生物。'
+    description: '擁有美麗的沙灘、熱帶植物和豐富的海洋生物。',
+    details:'墾丁國家公園位於臺灣南端恆春半島之南側，三面環海，是國內少數涵蓋陸地與海域的國家公園之一，也是臺灣本島唯一的熱帶區域。 特殊的地形、豐饒的動植物及獨特的民情風俗，不僅是保育、研究、環境教育的自然博物館，更是國民休閒旅遊的怡情勝地'
+
   },
   {
     imageUrl: 'https://via.placeholder.com/300x200?text=日月潭',
     title: '台北 - 陽明山國家公園',
-    description: '陽明山以其獨特的火山景觀、溫泉和美麗的花卉而聞名。'
+    description: '陽明山以其獨特的火山景觀、溫泉和美麗的花卉而聞名。',
+    details:'陽明山以其獨特的火山地形、豐富的自然生態、四季皆有的花卉美景、以及地熱溫泉而聞名，其中以大屯火山群為主體，保存著完整的火山遺跡。 豐富的動植物物種也讓陽明山成為生態觀察的絕佳地點，而擎天崗的草原景觀與小油坑的噴氣孔地貌，更是遊客不可錯過的景點。'
+
   },
   {
     imageUrl: 'https://via.placeholder.com/300x200?text=日月潭',
     title: '新北 - 九份老街',
-    description: '是一個融合了歷史和自然景觀的浪漫小鎮。'
+    description: '是一個融合了歷史和自然景觀的浪漫小鎮。',
+    details:'九份老街是位於台灣新北市瑞芳區的一座知名山城，因昔日盛產金礦而興盛，後因採礦業沒落而一度沉寂，卻保留了獨特的坡地景觀和日式建築風格。 其主要景觀集中在基山街、豎崎路和輕便路，以懷舊的氛圍、豐富的台灣傳統小吃、茶館文化和迷人的山海夜景聞名。'
+
   }
 ])
 
 function handleCardClick(title) {
-  alert(`歡迎來到：${title}`)
+  console.log(`歡迎來到：${title}`)
 }
 </script>
 
