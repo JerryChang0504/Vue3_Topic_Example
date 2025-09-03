@@ -43,6 +43,11 @@ const routes = [
     component: () => import('@/views/life/Food.vue'),
   },
   {
+    path: '/life/travel/taiwan',
+    name: 'taiwan.vue',
+    component: () => import('@/views/life/travel/taiwan.vue'),
+  },
+  {
     path: '/checkout',
     name: 'Checkout',
     component: () => import('@/views/checkout/checkout.vue'),

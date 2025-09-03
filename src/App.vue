@@ -36,9 +36,9 @@ const categories = [
         icon: Suitcase,
         clickable: false,
         subs: [
+          { name: 'taiwan', label: '台灣', icon: Flag },
           { name: 'usa', label: '美國', icon: Flag },
           { name: 'canada', label: '加拿大', icon: Flag },
-          { name: 'taiwan', label: '台灣', icon: Flag },
         ],
       },
     ],
