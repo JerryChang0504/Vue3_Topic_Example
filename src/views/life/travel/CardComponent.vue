@@ -1,16 +1,13 @@
 <template>
-  <div class="card" @click="toggleDetails">
+   <div
+    class="card"
+    :class="{ active: isActive }"
+    @click="toggleDetails"
+  >
     <img :src="imageUrl" :alt="title" />
     <h3>{{ title }}</h3>
     <p>{{ description }}</p>
-  </div>
-
-  <div v-if="showDetails" class="details">
-    <p>{{ details }}</p>
-    <button @click.stop="toggleDetails">收起詳情</button>
-  </div>
-    <div v-else>
-      <button @click.stop="toggleDetails">顯示詳情</button>
+    <button>顯示詳情</button>
   </div>
 </template>
 
@@ -22,71 +19,68 @@ const props = defineProps({
   imageUrl: String,
   title: String,
   description: String,
-  details:String
+  details:String,
+  modelValue: Boolean // 用 v-model 傳進來的 active 狀態
 })
 
 // ✅ 定義 emit
 const emit = defineEmits(['card-clicked'])
 
+
 const showDetails = ref(false)
 
 // ✅ 當卡片被點擊，向父元件發送事件
 function toggleDetails() {
+  emit('card-clicked') // 通知父元件
   showDetails.value = !showDetails.value
-  emit('card-clicked', props.title) // 傳送事件到父元件
 }
 
-//✅ 使用 watch 監聽詳情開關
-watch(showDetails, (newVal) => {
-  if (newVal) {
-    console.log(`✅ 已展開詳情：${props.title}`)
-  } else {
-    console.log(`❎ 已關閉詳情：${props.title}`)
-  }
-})
+// watch(showDetails, (val) => {
+//   console.log(val ? `✅ 展開：${props.title}` : `❎ 收起：${props.title}`)
+// })
 </script>
 
 <style scoped>
 .card {
-  background: white;
+  background: #fff;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 300px;
-  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 280px;
+  padding: 20px;
   text-align: center;
-  transition: transform 0.3s ease;
   cursor: pointer;
-}
-.card:hover {
-  transform: translateY(-10px);
 }
 .card img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
+  width: 100%;         /* 寬度100% */
+  height: 200px;       /* 固定高度 */
+  object-fit: cover;   /* ⭐️ 自動裁切圖片填滿，不變形 */
+  border-bottom: 1px solid #eee;
 }
-.card h3 {
-  font-size: 1.5rem;
-  margin: 20px 0 10px;
+.card.active {
+  background-color: #fffbe0; /* 🌕 淡黃色，表示已點擊 */
 }
-.card p {
-  font-size: 1rem;
-  padding: 0 20px 20px;
-  color: #666;
-}
-.details {
+.card button {
   margin-top: 10px;
-}
-button {
-  margin-top: 10px;
-  padding: 8px 16px;
-  background-color: #1e3d58;
+  background-color: #345678;
   color: white;
   border: none;
+  padding: 8px 16px;
   border-radius: 4px;
-  cursor: pointer;
 }
-button:hover {
-  background-color: #345678;
+/* 浮起效果：hover */
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* 浮起效果：點擊中 */
+.card:active {
+  transform: scale(0.98);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 顯示詳情時強調卡片 */
+.card.active {
+  border: 2px solid #1e3d58;
 }
 </style>

@@ -28,17 +28,17 @@ const cards = [
   {
     title: "中式美食",
     content: "火侯精準、調味講究。",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8mJBadfEj8M_dPQATxl0uH2ETTgqpHEZgHQ&s"
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiBzA_CF6q1NRWly1nHPQmPq5qTDWlOcuBpw&s"
   },
   {
     title: "日式美食",
     content: "營養均衡、注重原味。",
-    image: "https://www.gomaji.com/blog/wp-content/uploads/2021/01/FotoJet2-1.jpg"
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCXMt2TCFeut1XUW8corfps8xaVdNDo9aojA&s"
   },
   {
     title: "美式美食",
     content: "多樣性高、份量大。",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSS9Oj1CXD9hVKZANXu3l3CRKEavmHHV87Zeg&s"
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMrPc5gRKwe129UTckFkrdnpwis7ukV2fetw&s"
   },
 ];
 </script>
@@ -85,14 +85,11 @@ const cards = [
 }
 
 /* 卡片圖片 */
-.card-img {
+.card img {
   width: 100%;
-  height: 320px;
+  aspect-ratio: 3 / 2.5;   /* 寬高比，例如 3:2 */
   object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 15px;
 }
-
 /* 按鈕 */
 .btn {
   margin-top: 10px;
