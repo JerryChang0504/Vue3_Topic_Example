@@ -101,6 +101,20 @@ const handleUpdate = async () => {
     ElMessage.error(err.message || '更新失敗，請稍後再試')
   }
 }
+
+beforeRouteLeave(to, from, next) {
+// 只有在表單未儲存時才跳出警告
+    if (!this.isSaved) {
+      const answer = window.confirm('您的變更尚未儲存，確定要離開嗎？');
+      if (answer) {
+        next(); // 確定離開
+      } else {
+        next(false); // 取消離開，停留在當前頁面
+      }
+    } else {
+      next(); // 如果已儲存，則直接離開
+    }
+}
 </script>
 
 <style scoped>

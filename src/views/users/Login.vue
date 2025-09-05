@@ -70,9 +70,9 @@ const rules = {
 
 // 載入記住的帳號
 onMounted(() => {
-  const { username: rememberedUsername, rememberMe } = Storage.get(USER_KEY)
-  if (rememberedUsername) {
-    form.value.username = rememberedUsername
+  const { username, rememberMe } = Storage.get(USER_KEY) || {}
+  if (rememberMe) {
+    form.value.username = username
     form.value.rememberMe = rememberMe
   }
 })
@@ -94,6 +94,7 @@ const handleLogin = async () => {
     const res = await api.login(loginData)
     if (res.code === '0000') {
       userStore.login(loginData, res.result)
+
       ElMessage.success('登入成功！')
       goHome()
     }

@@ -7,7 +7,7 @@
     <template v-else>
       <!-- 使用者資訊 -->
       <div class="user-info">
-        👤 {{ user.username }}
+        👤 {{ user.username }} ({{ userRole }})
         <span v-if="remaining > 0" class="token-timer">
           Token 將於 <strong>{{ $formatSecondsToHHMMSS(remaining) }}</strong> 後過期
         </span>
@@ -32,14 +32,14 @@
 <script setup>
 import { useNavigation } from '@/composables/useNavigation'
 import { useUserStore } from '@/store/userStore'
-import Storage, { USER_KEY } from '@/utils/storageUtil'
 import { More } from '@element-plus/icons-vue'
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 
 const userStore = useUserStore()
-const isLogin = computed(() => !!userStore.user?.isLogin)
+const isLogin = computed(() => userStore.isLoggedIn)
 const user = computed(() => userStore.user || {})
+const userRole = computed(() => userStore.userRole)
 const { remainingTime: remaining } = storeToRefs(userStore)
 
 const { goTo, goHome } = useNavigation()
