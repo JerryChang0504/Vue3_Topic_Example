@@ -8,9 +8,12 @@
       </el-form-item>
       <el-form-item label="分類" prop="category">
         <el-select v-model="form.category" placeholder="請選擇分類">
-          <el-option label="電子產品" value="電子產品" />
-          <el-option label="生活用品" value="生活用品" />
-          <el-option label="服飾配件" value="服飾配件" />
+          <el-option
+            v-for="(ca, index) in category"
+            :key="index"
+            :label="ca.label"
+            :value="ca.value"
+          />
         </el-select>
       </el-form-item>
 
@@ -56,8 +59,6 @@
       </el-form-item>
     </el-form>
   </div>
-
-  <pre>{{ category }}</pre>
 </template>
 
 <script setup>
@@ -178,6 +179,14 @@ function cancelEdit() {
   goTo('ProductList')
 }
 
+const filterOptions = (allOptions, listNamen) => {
+  return allOptions
+    .filter((option) => option.listName === listNamen)
+    .map((option) => {
+      return { label: option.key, value: option.value }
+    })
+}
+
 /**
  * 編輯模式載入商品資料
  * @description 將商品資料載入到表單中
@@ -188,11 +197,8 @@ onMounted(async () => {
   if (productId.value) {
     try {
       const allOptions = inject('allOptions')
-      states.value = allOptions
-        .filter((option) => option.listName === 'order_status')
-        .map((option) => {
-          return { label: option.key, value: option.value }
-        })
+      states.value = filterOptions(allOptions, 'order_status')
+      category.value = filterOptions(allOptions, 'category')
 
       const res = await api.getProductById(productId.value)
       if (res.code === '0000') {
