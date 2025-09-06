@@ -8,9 +8,7 @@
       </el-form-item>
       <el-form-item label="分類" prop="category">
         <el-select v-model="form.category" placeholder="請選擇分類">
-          <el-option label="電子產品" value="電子產品" />
-          <el-option label="生活用品" value="生活用品" />
-          <el-option label="服飾配件" value="服飾配件" />
+          <el-option v-for="(ca, index) in category" :key="index" :label="ca.label" :value="ca.value" />
         </el-select>
       </el-form-item>
 
@@ -24,22 +22,17 @@
 
       <el-form-item label="商品狀態" prop="states">
         <el-select v-model="form.states" placeholder="請選擇狀態">
-          <el-option
-            v-for="(state, index) in states"
-            :key="index"
-            :label="state.label"
-            :value="state.value"
-          />
+          <el-option v-for="(state, index) in states" :key="index" :label="state.label" :value="state.value" />
         </el-select>
       </el-form-item>
 
+      <el-form-item label="商品狀態" prop="states">
+        <InputSelect v-model="form.states" :options="orderstatus" :labelKey="'name'" :valueKey="'key'"
+          :placeholder="'請選擇狀態'" :disabled="false" :clearable="true" />
+      </el-form-item>
+
       <el-form-item label="描述">
-        <el-input
-          v-model="form.description"
-          type="textarea"
-          :rows="3"
-          placeholder="簡要描述商品..."
-        />
+        <el-input v-model="form.description" type="textarea" :rows="3" placeholder="簡要描述商品..." />
       </el-form-item>
       <el-form-item label="上傳圖片">
         <input type="file" accept="image/*" @change="handleFileChange" />
@@ -57,7 +50,6 @@
     </el-form>
   </div>
 
-  <pre>{{ category }}</pre>
 </template>
 
 <script setup>
@@ -66,6 +58,7 @@ import api from '@/service/api'
 import { ElMessage } from 'element-plus'
 import { onMounted, reactive, ref, inject } from 'vue'
 import { useRoute } from 'vue-router'
+import InputSelect from '@/components/InputSelect.vue'
 const productId = ref(null) // 新增一個 ref 來儲存 id
 
 const route = useRoute()
@@ -178,6 +171,20 @@ function cancelEdit() {
   goTo('ProductList')
 }
 
+const filterOptions = (allOptions, listNamen) => {
+  return allOptions
+    .filter((option) => option.listName === listNamen)
+    .map((option) => {
+      return { label: option.key, value: option.value }
+    })
+}
+
+const orderstatus = ref([
+  { key: '0', name: '刪除' },
+  { key: '1', name: '上架' },
+  { key: '2', name: '下架' },
+])
+
 /**
  * 編輯模式載入商品資料
  * @description 將商品資料載入到表單中
@@ -188,11 +195,8 @@ onMounted(async () => {
   if (productId.value) {
     try {
       const allOptions = inject('allOptions')
-      states.value = allOptions
-        .filter((option) => option.listName === 'order_status')
-        .map((option) => {
-          return { label: option.key, value: option.value }
-        })
+      states.value = filterOptions(allOptions, 'order_status')
+      category.value = filterOptions(allOptions, 'category')
 
       const res = await api.getProductById(productId.value)
       if (res.code === '0000') {

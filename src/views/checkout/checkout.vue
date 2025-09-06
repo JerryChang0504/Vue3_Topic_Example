@@ -2,7 +2,7 @@
   <div class="checkout-page">
     <div class="container">
       <div class="step-indicator">
-        <el-steps :active="currentStep" finish-status="success" align-center>
+        <el-steps :active="currentStep" finish-states="success" align-center>
           <el-step title="確認商品"></el-step>
           <el-step title="配送資訊"></el-step>
           <el-step title="付款方式"></el-step>
@@ -37,12 +37,7 @@
 
           <div v-if="currentStep === 1" class="checkout-step">
             <h2 class="step-title">配送資訊</h2>
-            <el-form
-              :model="shippingForm"
-              :rules="shippingRules"
-              ref="shippingFormRef"
-              label-width="100px"
-            >
+            <el-form :model="shippingForm" :rules="shippingRules" ref="shippingFormRef" label-width="100px">
               <el-form-item label="收件人" prop="name">
                 <el-input v-model="shippingForm.name" placeholder="請輸入收件人姓名" />
               </el-form-item>
@@ -55,32 +50,14 @@
                 <div class="address-fields">
                   <div class="address-selects">
                     <el-select v-model="shippingForm.city" placeholder="選擇縣市" class="flex-1">
-                      <el-option
-                        v-for="city in cities"
-                        :key="city.value"
-                        :label="city.label"
-                        :value="city.value"
-                      />
+                      <el-option v-for="city in cities" :key="city.value" :label="city.label" :value="city.value" />
                     </el-select>
-                    <el-select
-                      v-model="shippingForm.district"
-                      placeholder="選擇區域"
-                      class="flex-1"
-                    >
-                      <el-option
-                        v-for="district in districts"
-                        :key="district.value"
-                        :label="district.label"
-                        :value="district.value"
-                      />
+                    <el-select v-model="shippingForm.district" placeholder="選擇區域" class="flex-1">
+                      <el-option v-for="district in districts" :key="district.value" :label="district.label"
+                        :value="district.value" />
                     </el-select>
                   </div>
-                  <el-input
-                    v-model="shippingForm.address"
-                    placeholder="請輸入詳細地址"
-                    type="textarea"
-                    :rows="2"
-                  />
+                  <el-input v-model="shippingForm.address" placeholder="請輸入詳細地址" type="textarea" :rows="2" />
                 </div>
               </el-form-item>
 
@@ -102,12 +79,7 @@
               </el-form-item>
 
               <el-form-item label="備註">
-                <el-input
-                  v-model="shippingForm.notes"
-                  type="textarea"
-                  :rows="3"
-                  placeholder="有任何特殊需求請在此註明"
-                />
+                <el-input v-model="shippingForm.notes" type="textarea" :rows="3" placeholder="有任何特殊需求請在此註明" />
               </el-form-item>
             </el-form>
           </div>
@@ -144,31 +116,18 @@
               <h3 class="form-title">信用卡資訊</h3>
               <el-form :model="creditCardForm" :rules="creditCardRules" ref="creditCardFormRef">
                 <el-form-item label="卡號" prop="cardNumber">
-                  <el-input
-                    v-model="creditCardForm.cardNumber"
-                    placeholder="1234 5678 9012 3456"
-                    maxlength="19"
-                    @input="formatCardNumber"
-                  />
+                  <el-input v-model="creditCardForm.cardNumber" placeholder="1234 5678 9012 3456" maxlength="19"
+                    @input="formatCardNumber" />
                 </el-form-item>
 
                 <div class="card-info-grid">
                   <el-form-item label="有效期限" prop="expiryDate">
-                    <el-input
-                      v-model="creditCardForm.expiryDate"
-                      placeholder="MM/YY"
-                      maxlength="5"
-                      @input="formatExpiryDate"
-                    />
+                    <el-input v-model="creditCardForm.expiryDate" placeholder="MM/YY" maxlength="5"
+                      @input="formatExpiryDate" />
                   </el-form-item>
 
                   <el-form-item label="安全碼" prop="cvv">
-                    <el-input
-                      v-model="creditCardForm.cvv"
-                      placeholder="123"
-                      maxlength="4"
-                      type="password"
-                    />
+                    <el-input v-model="creditCardForm.cvv" placeholder="123" maxlength="4" type="password" />
                   </el-form-item>
                 </div>
 
@@ -189,13 +148,7 @@
               下一步
             </el-button>
 
-            <el-button
-              v-else
-              type="primary"
-              @click="submitOrder"
-              :loading="submitting"
-              icon="Check"
-            >
+            <el-button v-else type="primary" @click="submitOrder" :loading="submitting" icon="Check">
               確認訂單
             </el-button>
           </div>
@@ -507,7 +460,7 @@ onMounted(() => {
 }
 
 /* Item Card */
-.space-y-4 > * + * {
+.space-y-4>*+* {
   margin-top: 16px;
 }
 
@@ -688,7 +641,7 @@ onMounted(() => {
   margin-bottom: 16px;
 }
 
-.summary-details > * + * {
+.summary-details>*+* {
   margin-top: 8px;
 }
 

@@ -5,19 +5,9 @@
       <div class="header-actions">
         <el-button @click="goTo('AddProduct')" type="primary"> + 新增商品 </el-button>
 
-        <el-select
-          v-model="selectedCategory"
-          placeholder="選擇分類"
-          clearable
-          class="select-category"
-        >
+        <el-select v-model="selectedCategory" placeholder="選擇分類" clearable class="select-category">
           <el-option label="全部" value="" />
-          <el-option
-            v-for="category in categories"
-            :key="category"
-            :label="category"
-            :value="category"
-          />
+          <el-option v-for="category in categories" :key="category" :label="category" :value="category" />
         </el-select>
       </div>
     </div>
@@ -26,13 +16,7 @@
       <el-table v-loading="isLoading" :data="filteredProducts" style="width: 100%" stripe border>
         <el-table-column label="圖片" width="100" align="center">
           <template #default="{ row }">
-            <el-image
-              :src="row.imageBase64"
-              fit="cover"
-              style="width: 60px; height: 60px"
-              class="img-rounded"
-              lazy
-            >
+            <el-image :src="row.imageBase64" fit="cover" style="width: 60px; height: 60px" class="img-rounded" lazy>
               <template #error>
                 <div class="image-slot">
                   <el-icon>

@@ -47,7 +47,7 @@ apiService.interceptors.response.use(
     Storage.remove(CART_KEY) // 清除購物車
     Storage.remove(TOKEN_KEY) // 清除 token
     // 可自訂錯誤訊息處理
-    if (error.response?.status === 401) {
+    if (error.response?.states === 401) {
       ElMessage.error('登入已過期，請重新登入')
       goLogin()
     } else {

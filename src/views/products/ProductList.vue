@@ -3,19 +3,9 @@
     <div class="product-list-header">
       <h2 class="header-title">商品列表</h2>
       <div class="header-controls">
-        <el-select
-          v-model="selectedCategory"
-          placeholder="選擇分類"
-          clearable
-          class="category-select"
-        >
+        <el-select v-model="selectedCategory" placeholder="選擇分類" clearable class="category-select">
           <el-option label="全部" value="" />
-          <el-option
-            v-for="category in categories"
-            :key="category"
-            :label="category"
-            :value="category"
-          />
+          <el-option v-for="category in categories" :key="category" :label="category" :value="category" />
         </el-select>
         <el-button @click="drawerVisible = true" type="primary" plain>
           🛒 購物車 ({{ cartStore.totalQuantity }})
@@ -30,26 +20,13 @@
     </el-row>
 
     <el-row v-else :gutter="20">
-      <el-col
-        v-for="product in visibleProducts"
-        :key="product.id"
-        :span="6"
-        :xs="24"
-        :sm="12"
-        :md="8"
-        :lg="6"
-        class="product-col"
-      >
+      <el-col v-for="product in visibleProducts" :key="product.id" :span="6" :xs="24" :sm="12" :md="8" :lg="6"
+        class="product-col">
         <el-card shadow="hover" body-style="padding: 0;">
           <div class="card-image-wrapper" @click="showProductDetail(product)">
             <el-tooltip :content="product.description" placement="top">
-              <img
-                :src="product.imageBase64"
-                loading="lazy"
-                alt="product image"
-                class="card-image"
-                @error="handleImageError"
-              />
+              <img :src="product.imageBase64" loading="lazy" alt="product image" class="card-image"
+                @error="handleImageError" />
             </el-tooltip>
           </div>
 
@@ -59,12 +36,7 @@
             <el-rate v-model="product.rating" disabled show-score :max="5" class="product-rating" />
             <p class="product-price">$ {{ product.price }}</p>
 
-            <el-button
-              type="primary"
-              size="small"
-              class="add-to-cart-button"
-              @click="addToCart(product)"
-            >
+            <el-button type="primary" size="small" class="add-to-cart-button" @click="addToCart(product)">
               加入購物車
             </el-button>
           </div>
@@ -82,13 +54,7 @@
         <div class="product-detail-content">
           <p class="detail-price">$ {{ currentProduct.price }}</p>
           <p class="detail-description">{{ currentProduct.description }}</p>
-          <el-rate
-            v-model="currentProduct.rating"
-            disabled
-            show-score
-            :max="5"
-            class="detail-rating"
-          />
+          <el-rate v-model="currentProduct.rating" disabled show-score :max="5" class="detail-rating" />
         </div>
       </div>
     </el-dialog>
@@ -294,27 +260,5 @@ onMounted(async () => {
 .detail-rating {
   margin-bottom: 8px;
   justify-content: center;
-}
-
-/* Element Plus Deep Selectors (unchanged) */
-:deep(.el-tooltip__trigger) {
-  display: block;
-  width: 100%;
-}
-
-::v-deep(.el-input-number.el-input-number--small) {
-  width: 90px;
-}
-
-::v-deep(.el-input-number.el-input-number--small .el-input__inner) {
-  height: 24px;
-  line-height: 24px;
-  font-size: 12px;
-}
-
-::v-deep(.el-input-number.el-input-number--small .el-input-number__decrease),
-::v-deep(.el-input-number.el-input-number--small .el-input-number__increase) {
-  height: 24px;
-  width: 24px;
 }
 </style>

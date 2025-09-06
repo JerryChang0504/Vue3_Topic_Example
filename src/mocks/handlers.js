@@ -4,7 +4,7 @@
 // export const handlers = [
 //   rest.get('/api/products', (req, res, ctx) => {
 //     return res(
-//       ctx.status(200),
+//       ctx.states(200),
 //       ctx.delay(500), // 模擬延遲
 //       ctx.json([
 //         { id: 1, name: '滑鼠' },
