@@ -22,6 +22,17 @@
         <el-input-number v-model="form.stock" :min="0" :step="1" placeholder="請輸入庫存數量" />
       </el-form-item>
 
+      <el-form-item label="商品狀態" prop="states">
+        <el-select v-model="form.states" placeholder="請選擇狀態">
+          <el-option
+            v-for="(state, index) in states"
+            :key="index"
+            :label="state.label"
+            :value="state.value"
+          />
+        </el-select>
+      </el-form-item>
+
       <el-form-item label="描述">
         <el-input
           v-model="form.description"
@@ -45,13 +56,15 @@
       </el-form-item>
     </el-form>
   </div>
+
+  <pre>{{ category }}</pre>
 </template>
 
 <script setup>
 import { useNavigation } from '@/composables/useNavigation'
 import api from '@/service/api'
 import { ElMessage } from 'element-plus'
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive, ref, inject } from 'vue'
 import { useRoute } from 'vue-router'
 const productId = ref(null) // 新增一個 ref 來儲存 id
 
@@ -63,11 +76,14 @@ const form = reactive({
   category: '',
   price: 0,
   stock: 0,
+  states: '',
   description: '',
   imageBase64: '', // 改成 Base64 字串
 })
 const imagePreview = ref(null)
 
+const states = ref([])
+const category = ref([])
 // 編輯模式的驗證規則 (圖片非必填)
 const rules = {
   name: [{ required: true, message: '請輸入商品名稱', trigger: 'blur' }],
@@ -151,6 +167,7 @@ function resetForm() {
   form.category = ''
   form.price = null
   form.stock = 0
+  form.states = ''
   form.description = ''
   form.imageBase64 = ''
   imagePreview.value = null
@@ -170,6 +187,13 @@ onMounted(async () => {
   productId.value = route.params?.id
   if (productId.value) {
     try {
+      const allOptions = inject('allOptions')
+      states.value = allOptions
+        .filter((option) => option.listName === 'order_status')
+        .map((option) => {
+          return { label: option.key, value: option.value }
+        })
+
       const res = await api.getProductById(productId.value)
       if (res.code === '0000') {
         const product = res.result

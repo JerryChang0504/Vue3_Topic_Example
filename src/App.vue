@@ -1,8 +1,8 @@
 <script setup>
-import { Coffee, Cpu, Flag, Monitor, Suitcase, InfoFilled, List, Odometer } from '@element-plus/icons-vue'
-import Breadcrumb from './Navigation/Breadcrumb.vue'
-import CategorySidebar from './Navigation/CategorySidebar.vue'
-import TopBar from './Navigation/TopBar.vue'
+import { Coffee, Cpu, Flag, Monitor, Suitcase, Odometer } from '@element-plus/icons-vue'
+import Breadcrumb from './navigation/Breadcrumb.vue'
+import CategorySidebar from './navigation/CategorySidebar.vue'
+import TopBar from './navigation/TopBar.vue'
 
 const categories = [
   {
@@ -11,8 +11,8 @@ const categories = [
     icon: Monitor,
     clickable: false,
     subs: [
-      { name: '', label: '商品介紹', icon: InfoFilled },
-      { name: 'list', label: '商品管理', icon: List },
+      { name: '', label: '商品介紹', icon: Cpu },
+      { name: 'list', label: '商品管理', icon: Cpu },
     ],
   },
   {
@@ -37,7 +37,6 @@ const categories = [
         subs: [
           { name: 'usa', label: '美國', icon: Flag },
           { name: 'canada', label: '加拿大', icon: Flag },
-          { name: 'taiwan', label: '台灣', icon: Flag },
         ],
       },
     ],
