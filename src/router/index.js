@@ -36,7 +36,7 @@ const routes = [
     path: '/settings/options',
     name: 'OptionsManage',
     component: () => import('@/views/settings/OptionsManage.vue'),
-    meta:{ requiresAuth: true ,role:['Admin']},
+    meta:{ requiresAuth: true ,role:['Admin','User']},
   },
   {
     path: '/life/food',
@@ -52,7 +52,16 @@ const routes = [
     path: '/checkout',
     name: 'Checkout',
     component: () => import('@/views/checkout/checkout.vue'),
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true ,role:['USER']},
+    beforeEach: (to, from, next) => {
+      // 檢查是否已登入
+      const isLoggedIn = !!Storage.get(TOKEN_KEY)
+      const cartItems = Storage.get('cartItems')
+      if (!isLoggedIn&&!cartItems) {
+        return next('/login')
+      }
+      next()
+    },
   },
   { path: '/about', name: 'About', component: () => import('@/views/About.vue') },
   {
@@ -76,7 +85,7 @@ router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth && !isLoggedIn) {
     return next('/login')
   }
-  if (to.meta.role && !to.meta.role.includes(role)) {
+  if (to.meta.role && !to.meta?.role?.includes(role)) {
     return next('/accessDenied')
   }
   next()
