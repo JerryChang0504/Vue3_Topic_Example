@@ -1,4 +1,4 @@
-import Storage, { CART_KEY, TOKEN_KEY } from '@/utils/storageUtil'
+import Storage, { CART_KEY, TOKEN_KEY,USER_ROLE_KEY } from '@/utils/storageUtil'
 import { defineStore } from 'pinia'
 
 function parseJwt(token) {
@@ -32,8 +32,9 @@ export const useUserStore = defineStore('userStore', {
      * 啟動 Token 倒數
      * 將用戶資料儲存到狀態中
      * */
-    login(user) {
+    login(user,result) {
       this.user = user
+      Storage.set(USER_ROLE_KEY, result.role)
     },
     /**
      * 啟動 Token 倒數
