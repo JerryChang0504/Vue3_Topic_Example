@@ -1,4 +1,4 @@
-import Storage, { CART_KEY, TOKEN_KEY } from '@/utils/storageUtil'
+import Storage, { CART_KEY, TOKEN_KEY,USER_ROLE_KEY } from '@/utils/storageUtil'
 import { defineStore } from 'pinia'
 
 function parseJwt(token) {
