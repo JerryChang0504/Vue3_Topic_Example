@@ -10,14 +10,8 @@
         </el-form-item>
 
         <el-form-item label="密碼" prop="password">
-          <el-input
-            v-model="form.password"
-            type="password"
-            show-password
-            placeholder="請輸入密碼"
-            clearable
-            @keyup.enter="handleLogin"
-          />
+          <el-input v-model="form.password" type="password" show-password placeholder="請輸入密碼" clearable
+            @keyup.enter="handleLogin" />
         </el-form-item>
 
         <el-form-item>
@@ -91,12 +85,13 @@ const handleLogin = async () => {
   }
 
   const res = await api.login(loginData)
-  const token = res.result
-  userStore.login(loginData)
-  userStore.startTokenCountdown(token)
-
-  ElMessage.success('登入成功！')
-  goHome()
+  if (res.code === '0000') {
+    const { token } = res.result
+    userStore.login(loginData, res.result)
+    userStore.startTokenCountdown(token)
+    ElMessage.success('登入成功！')
+    goHome()
+  }
 }
 
 const handleForgotPassword = () => {

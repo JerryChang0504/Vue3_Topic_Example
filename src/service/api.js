@@ -6,11 +6,7 @@ const api = {
   // 註冊
   register: (data) => apiService.post(API_ROUTES.REGISTER, data),
   // 登入
-  login: async (data) => {
-    const res = await apiService.post(API_ROUTES.LOGIN, data)
-    Storage.set(TOKEN_KEY, res.result)
-    return res
-  },
+  login:  (data) =>apiService.post(API_ROUTES.LOGIN, data),
   // 用戶資料
   user: () => apiService.get(API_ROUTES.USER),
   // 查詢個人資料
@@ -38,7 +34,7 @@ const api = {
 
   // 取得選項列表
   getOptions: () => apiService.get(API_ROUTES.OPTIONS_LIST),
-  
+
   // 新增選項
   addOption: (data) => apiService.post(API_ROUTES.OPTIONS_ADD, data),
 

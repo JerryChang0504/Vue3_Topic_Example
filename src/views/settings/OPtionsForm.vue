@@ -1,14 +1,8 @@
 <template>
   <h2>{{ mode === 'add' ? '新增選項' : '編輯選項' }}</h2>
-  <el-form
-    ref="optionFormRef"
-    :model="optionForm"
-    :rules="rules"
-    label-width="120px"
-    class="option-form"
-  >
+  <el-form ref="optionFormRef" :model="optionForm" :rules="rules" label-width="120px" class="option-form">
     <el-form-item label="分類名稱" prop="listName">
-      <el-input v-model="optionForm.listName" placeholder="例如: order_status" />
+      <el-input v-model="optionForm.listName" placeholder="例如: order_states" />
     </el-form-item>
 
     <el-form-item label="選項名稱" prop="name">
@@ -28,12 +22,7 @@
     </el-form-item>
 
     <el-form-item label="描述" prop="description">
-      <el-input
-        v-model="optionForm.description"
-        type="textarea"
-        :rows="2"
-        placeholder="輸入選項描述"
-      />
+      <el-input v-model="optionForm.description" type="textarea" :rows="2" placeholder="輸入選項描述" />
     </el-form-item>
 
     <el-form-item>

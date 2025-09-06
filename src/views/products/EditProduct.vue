@@ -27,7 +27,7 @@
       </el-form-item>
 
       <el-form-item label="商品狀態" prop="states">
-        <InputSelect v-model="form.states" :options="orderstatus" :labelKey="'name'" :valueKey="'key'"
+        <InputSelect v-model="form.states" :options="orderstates" :labelKey="'name'" :valueKey="'key'"
           :placeholder="'請選擇狀態'" :disabled="false" :clearable="true" />
       </el-form-item>
 
@@ -179,7 +179,7 @@ const filterOptions = (allOptions, listNamen) => {
     })
 }
 
-const orderstatus = ref([
+const orderstates = ref([
   { key: '0', name: '刪除' },
   { key: '1', name: '上架' },
   { key: '2', name: '下架' },
@@ -195,7 +195,7 @@ onMounted(async () => {
   if (productId.value) {
     try {
       const allOptions = inject('allOptions')
-      states.value = filterOptions(allOptions, 'order_status')
+      states.value = filterOptions(allOptions, 'order_states')
       category.value = filterOptions(allOptions, 'category')
 
       const res = await api.getProductById(productId.value)

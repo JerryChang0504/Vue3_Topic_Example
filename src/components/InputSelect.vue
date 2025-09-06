@@ -2,6 +2,8 @@
   <el-select v-model="internalValue" :placeholder="placeholder" :disabled="disabled" :clearable="clearable">
     <el-option v-for="item in options" :key="item[valueKey]" :label="item[labelKey]" :value="item[valueKey]" />
   </el-select>
+
+  <el-option v-for="item in options" :key="item[valueKey]" :label="item[labelKey]" :value="item[valueKey]" />
 </template>
 
 <script setup>
