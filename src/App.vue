@@ -1,49 +1,16 @@
 <script setup>
-import { Coffee, Cpu, Flag, Monitor, Suitcase, Setting } from '@element-plus/icons-vue'
 import Breadcrumb from './navigation/Breadcrumb.vue'
 import CategorySidebar from './navigation/CategorySidebar.vue'
 import TopBar from './navigation/TopBar.vue'
+import { getNavMenu } from './Navigation/getNavMenu'
+import { useUserStore } from '@/store/userStore'
+import { computed } from 'vue'
 
-const categories = [
-  {
-    name: 'products',
-    label: '商品相關',
-    icon: Monitor,
-    clickable: false,
-    subs: [
-      { name: '', label: '商品介紹', icon: Cpu },
-      { name: 'list', label: '商品管理', icon: Cpu },
-    ],
-  },
-  {
-    name: 'settings',
-    label: '管理相關',
-    icon: Setting,
-    clickable: false,
-    subs: [{ name: 'options', label: '選項管理', icon: Cpu }],
-  },
-
-  {
-    name: 'life',
-    label: '生活類',
-    icon: Coffee,
-    clickable: false,
-    subs: [
-      { name: 'food', label: '美食', icon: Coffee },
-      {
-        name: 'travel',
-        label: '旅遊',
-        icon: Suitcase,
-        clickable: false,
-        subs: [
-          { name: 'usa', label: '美國', icon: Flag },
-          { name: 'canada', label: '加拿大', icon: Flag },
-          { name: 'taiwan', label: '台灣', icon: Flag },
-        ],
-      },
-    ],
-  },
-]
+const userStore = useUserStore()
+const userRole = computed(() => userStore.userRole)
+const navMenu = computed(() => {
+  return getNavMenu(userRole.value)
+})
 </script>
 
 <template>
@@ -53,10 +20,10 @@ const categories = [
 
   <main>
     <div class="layout">
-      <CategorySidebar :categories="categories" />
+      <CategorySidebar :categories="navMenu" />
 
       <div class="content">
-        <Breadcrumb :categories="categories" />
+        <Breadcrumb :categories="navMenu" />
         <router-view />
       </div>
     </div>

@@ -36,7 +36,7 @@ const routes = [
     path: '/settings/options',
     name: 'OptionsManage',
     component: () => import('@/views/settings/OptionsManage.vue'),
-    meta:{ requiresAuth: true ,role:['Admin','User']},
+    meta:{ requiresAuth: true ,role:['ADMIN','USER']},
   },
   {
     path: '/life/food',
