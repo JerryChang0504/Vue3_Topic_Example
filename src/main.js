@@ -9,14 +9,13 @@ import FormatPlugin from './plugins/format' // 載入插件
 import router from './router'
 import { createPinia } from 'pinia'
 import { formatSecondsToHHMMSS } from './utils/format'
-import api from '@/service/api'
+import { getAndCacheOptions } from './utils/optionService'
 const pinia = createPinia()
 const app = createApp(App)
 
 const start = async()=> {
-    const res = await api.getOptions()
-    const value = res.result
-    app.provide('allOptions', value)
+    const res = await getAndCacheOptions()
+    app.provide('allOptions', res)
     app.config.globalProperties.$formatSecondsToHHMMSS = formatSecondsToHHMMSS
     app.use(FormatPlugin) // 註冊插件
     app.use(pinia)
