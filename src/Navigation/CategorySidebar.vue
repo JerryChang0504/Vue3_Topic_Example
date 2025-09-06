@@ -1,8 +1,19 @@
 <template>
   <div class="sidebar-wrapper">
-    <el-menu class="sidebar-menu" :default-active="active" router :collapse="isCollapsed" :unique-opened="false"
-      :collapse-transition="false">
-      <MenuItem v-for="item in categoriesWithPaths" :key="item.path" :item="item" :basePath="basePath" />
+    <el-menu
+      class="sidebar-menu"
+      :default-active="active"
+      router
+      :collapse="isCollapsed"
+      :unique-opened="false"
+      :collapse-transition="false"
+    >
+      <MenuItem
+        v-for="item in categoriesWithPaths"
+        :key="item.path"
+        :item="item"
+        :basePath="basePath"
+      />
     </el-menu>
 
     <!-- 右下小按鈕 -->
@@ -122,7 +133,7 @@ const toggleCollapse = () => {
   color: white;
 }
 
-.sidebar-menu .el-sub-menu.is-open>.el-sub-menu__title {
+.sidebar-menu .el-sub-menu.is-open > .el-sub-menu__title {
   background-color: #e6f7ff;
   color: #409eff;
 }

@@ -1,5 +1,5 @@
 import CategoryPage from '@/navigation/sub/CategoryPage.vue'
-import Storage, { TOKEN_KEY } from '@/utils/storageUtil'
+import Storage, { TOKEN_KEY,USER_ROLE_KEY } from '@/utils/storageUtil'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
@@ -10,7 +10,7 @@ const routes = [
     path: '/profile',
     name: 'Profile',
     component: () => import('@/views/users/Profile.vue'),
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true ,role:['ADMIN','USER']},
   },
   {
     path: '/products',
@@ -36,17 +36,27 @@ const routes = [
     path: '/settings/options',
     name: 'OptionsManage',
     component: () => import('@/views/settings/OptionsManage.vue'),
-  },
-  {
-    path: '/settings/add',
-    name: 'AddOption',
-    component: () => import('@/views/settings/AddOption.vue'),
+    meta: { requiresAuth: true ,role:['ADMIN','USER']},
   },
   {
     path: '/checkout',
     name: 'Checkout',
     component: () => import('@/views/checkout/checkout.vue'),
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true,role:['USER'] },
+    beforeEach: (to, from, next) => {
+      // 檢查是否已登入
+      const isLoggedIn = !!Storage.get(TOKEN_KEY)
+      const cartItems = Storage.get('cartItems')
+      if (!isLoggedIn&&!cartItems) {
+        return next('/login')
+      }
+      next()
+    }
+  },
+  {
+    path:'/accessDenied',
+    name:'AccessDenied',
+    component: () => import('@/views/users/AccessDenied.vue'),
   },
   { path: '/about', name: 'About', component: () => import('@/views/About.vue') },
   {
@@ -65,11 +75,15 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   // 檢查是否已登入
   const isLoggedIn = !!Storage.get(TOKEN_KEY)
+  const role = Storage.get(USER_ROLE_KEY)
 
   if (to.meta.requiresAuth && !isLoggedIn) {
     return next('/login')
   }
-
+  
+  if (to.meta.requiresAuth && !to.meta?.role?.includes(role)) {
+    return next('/accessDenied')
+  }
   next()
 })
 export default router

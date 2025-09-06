@@ -295,26 +295,4 @@ onMounted(async () => {
   margin-bottom: 8px;
   justify-content: center;
 }
-
-/* Element Plus Deep Selectors (unchanged) */
-:deep(.el-tooltip__trigger) {
-  display: block;
-  width: 100%;
-}
-
-::v-deep(.el-input-number.el-input-number--small) {
-  width: 90px;
-}
-
-::v-deep(.el-input-number.el-input-number--small .el-input__inner) {
-  height: 24px;
-  line-height: 24px;
-  font-size: 12px;
-}
-
-::v-deep(.el-input-number.el-input-number--small .el-input-number__decrease),
-::v-deep(.el-input-number.el-input-number--small .el-input-number__increase) {
-  height: 24px;
-  width: 24px;
-}
 </style>

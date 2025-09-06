@@ -8,9 +8,12 @@
       </el-form-item>
       <el-form-item label="分類" prop="category">
         <el-select v-model="form.category" placeholder="請選擇分類">
-          <el-option label="電子產品" value="電子產品" />
-          <el-option label="生活用品" value="生活用品" />
-          <el-option label="服飾配件" value="服飾配件" />
+          <el-option
+            v-for="(ca, index) in category"
+            :key="index"
+            :label="ca.label"
+            :value="ca.value"
+          />
         </el-select>
       </el-form-item>
 
@@ -24,10 +27,25 @@
 
       <el-form-item label="商品狀態" prop="states">
         <el-select v-model="form.states" placeholder="請選擇狀態">
-          <el-option label="銷售中" value="2" />
-          <el-option label="停售" value="1" />
-          <el-option label="刪除" value="0" />
+          <el-option
+            v-for="(state, index) in states"
+            :key="index"
+            :label="state.label"
+            :value="state.value"
+          />
         </el-select>
+      </el-form-item>
+
+      <el-form-item label="商品狀態" prop="states">
+        <InputSelect
+          v-model="form.states"
+          :options="orderstatus"
+          :labelKey="'name'"
+          :valueKey="'key'"
+          :placeholder="'請選擇狀態'"
+          :disabled="false"
+          :clearable="true"
+        />
       </el-form-item>
 
       <el-form-item label="描述">
@@ -59,8 +77,10 @@
 import { useNavigation } from '@/composables/useNavigation'
 import api from '@/service/api'
 import { ElMessage } from 'element-plus'
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive, ref, inject } from 'vue'
 import { useRoute } from 'vue-router'
+import InputSelect from '@/components/InputSelect.vue'
+
 const productId = ref(null) // 新增一個 ref 來儲存 id
 
 const route = useRoute()
@@ -71,11 +91,14 @@ const form = reactive({
   category: '',
   price: 0,
   stock: 0,
+  states: '',
   description: '',
   imageBase64: '', // 改成 Base64 字串
 })
 const imagePreview = ref(null)
 
+const states = ref([])
+const category = ref([])
 // 編輯模式的驗證規則 (圖片非必填)
 const rules = {
   name: [{ required: true, message: '請輸入商品名稱', trigger: 'blur' }],
@@ -159,6 +182,7 @@ function resetForm() {
   form.category = ''
   form.price = null
   form.stock = 0
+  form.states = ''
   form.description = ''
   form.imageBase64 = ''
   imagePreview.value = null
@@ -169,6 +193,19 @@ function cancelEdit() {
   goTo('ProductList')
 }
 
+const filterOptions = (allOptions, listNamen) => {
+  return allOptions
+    .filter((option) => option.listName === listNamen)
+    .map((option) => {
+      return { label: option.key, value: option.value }
+    })
+}
+
+const orderstatus = ref([
+  { key: '0', name: '刪除' },
+  { key: '1', name: '上架' },
+  { key: '2', name: '下架' },
+])
 /**
  * 編輯模式載入商品資料
  * @description 將商品資料載入到表單中
@@ -178,6 +215,10 @@ onMounted(async () => {
   productId.value = route.params?.id
   if (productId.value) {
     try {
+      const allOptions = inject('allOptions')
+      states.value = filterOptions(allOptions, 'order_status')
+      category.value = filterOptions(allOptions, 'category')
+
       const res = await api.getProductById(productId.value)
       if (res.code === '0000') {
         const product = res.result

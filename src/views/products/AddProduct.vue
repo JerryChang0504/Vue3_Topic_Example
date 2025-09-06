@@ -23,14 +23,6 @@
         <el-input-number v-model="form.stock" :min="0" :step="1" placeholder="請輸入庫存數量" />
       </el-form-item>
 
-      <el-form-item label="商品狀態" prop="states">
-        <el-select v-model="form.states" placeholder="請選擇狀態">
-          <el-option label="銷售中" :value="2" />
-          <el-option label="停售" :value="1" />
-          <el-option label="刪除" :value="0" />
-        </el-select>
-      </el-form-item>
-
       <el-form-item label="描述">
         <el-input
           v-model="form.description"
@@ -84,7 +76,6 @@ const form = reactive({
   description: '', //描述
   imageBase64: '', //圖片
   imageType: '', //圖片類型
-  states: '2',
 })
 
 const rules = {
@@ -185,8 +176,6 @@ const successButtons = [
 function submitForm() {
   formRef.value.validate(async (valid) => {
     if (!valid) return
-
-    console.log('送出前的商品狀態 form.states =', form.states)
 
     try {
       await api.addProduct(form)
