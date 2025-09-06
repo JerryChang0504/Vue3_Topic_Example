@@ -32,9 +32,11 @@ export const useUserStore = defineStore('userStore', {
      * 啟動 Token 倒數
      * 將用戶資料儲存到狀態中
      * */
-    login(user,result) {
+    login(user,{token,role}) {
       this.user = user
-      Storage.set(USER_ROLE_KEY, result.role)
+      Storage.set(USER_ROLE_KEY, role)
+      Storage.set(TOKEN_KEY,token)
+      this.startTokenCountdown(token)
     },
     /**
      * 啟動 Token 倒數
@@ -77,6 +79,7 @@ export const useUserStore = defineStore('userStore', {
     logout() {
       this.stopTokenCountdown()
       this.user.isLogin = false
+      Storage.remove(USER_ROLE_KEY)
       Storage.remove(TOKEN_KEY)
       Storage.remove(CART_KEY)
       this.remainingTime = 0
