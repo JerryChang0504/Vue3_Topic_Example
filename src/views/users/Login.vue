@@ -91,7 +91,7 @@ const handleLogin = async () => {
   }
 
   const res = await api.login(loginData)
-  const token = res.result
+  const { token, role } = res.result.token
   userStore.login(loginData)
   userStore.startTokenCountdown(token)
 
