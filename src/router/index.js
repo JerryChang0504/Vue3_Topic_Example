@@ -10,7 +10,7 @@ const routes = [
     path: '/profile',
     name: 'Profile',
     component: () => import('@/views/users/Profile.vue'),
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true ,role:['ADMIN','USER']},
   },
   {
     path: '/products',
