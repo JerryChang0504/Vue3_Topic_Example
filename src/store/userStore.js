@@ -21,7 +21,12 @@ export const useUserStore = defineStore('userStore', {
     },
     remainingTime: 0, // 剩餘秒數
     timer: null, // 計時器
+    role: 'GUEST',
   }),
+  getters: {
+    userRole: (state) => state.role,
+    isLoggedIn: (state) => state.user.isLogin,
+  },
   actions: {
     /**
      * 登入
@@ -34,6 +39,7 @@ export const useUserStore = defineStore('userStore', {
      * */
     login(user,{token,role}) {
       this.user = user
+      this.role = role
       Storage.set(USER_ROLE_KEY, role)
       Storage.set(TOKEN_KEY,token)
       this.startTokenCountdown(token)
@@ -78,6 +84,7 @@ export const useUserStore = defineStore('userStore', {
      */
     logout() {
       this.stopTokenCountdown()
+      this.role='GUEST'
       this.user.isLogin = false
       Storage.remove(USER_ROLE_KEY)
       Storage.remove(TOKEN_KEY)
