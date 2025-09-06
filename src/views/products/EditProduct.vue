@@ -56,13 +56,15 @@
       </el-form-item>
     </el-form>
   </div>
+
+  <pre>{{ category }}</pre>
 </template>
 
 <script setup>
 import { useNavigation } from '@/composables/useNavigation'
 import api from '@/service/api'
 import { ElMessage } from 'element-plus'
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive, ref, inject } from 'vue'
 import { useRoute } from 'vue-router'
 const productId = ref(null) // 新增一個 ref 來儲存 id
 
@@ -81,7 +83,7 @@ const form = reactive({
 const imagePreview = ref(null)
 
 const states = ref([])
-
+const category = ref([])
 // 編輯模式的驗證規則 (圖片非必填)
 const rules = {
   name: [{ required: true, message: '請輸入商品名稱', trigger: 'blur' }],
@@ -185,7 +187,12 @@ onMounted(async () => {
   productId.value = route.params?.id
   if (productId.value) {
     try {
-      await api.getOptionsByListName('order_status').then((res) => (states.value = res.result))
+      const allOptions = inject('allOptions')
+      states.value = allOptions
+        .filter((option) => option.listName === 'order_status')
+        .map((option) => {
+          return { label: option.key, value: option.value }
+        })
 
       const res = await api.getProductById(productId.value)
       if (res.code === '0000') {
