@@ -36,6 +36,7 @@ const routes = [
     path: '/settings/options',
     name: 'OptionsManage',
     component: () => import('@/views/settings/OptionsManage.vue'),
+    meta: { requiresAuth: true ,role:['USER','ADMIN']},
   },
   {
     path: '/checkout',
@@ -58,6 +59,8 @@ const router = createRouter({
 })
 // ✅ 加入全域導航守衛：權限驗證
 router.beforeEach((to, from, next) => {
+  console.log("🚀 ~ from:", from)
+  console.log("🚀 ~ to:", to)
   // 檢查是否已登入
   const isLoggedIn = !!Storage.get(TOKEN_KEY)
 
