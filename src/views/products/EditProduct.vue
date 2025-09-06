@@ -33,6 +33,18 @@
         </el-select>
       </el-form-item>
 
+      <el-form-item label="商品狀態" prop="states">
+        <InputSelect
+          v-model="form.states"
+          :options="orderstatus"
+          :labelKey="'name'"
+          :valueKey="'key'"
+          :placeholder="'請選擇狀態'"
+          :disabled="false"
+          :clearable="true"
+        />
+      </el-form-item>
+
       <el-form-item label="描述">
         <el-input
           v-model="form.description"
@@ -64,6 +76,7 @@ import api from '@/service/api'
 import { ElMessage } from 'element-plus'
 import { onMounted, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import InputSelect from '@/components/InputSelect.vue'
 const productId = ref(null) // 新增一個 ref 來儲存 id
 
 const route = useRoute()
@@ -82,8 +95,8 @@ const imagePreview = ref(null)
 
 const states = ref([
   { key: '刪除', value: '0' },
-  { key: '停售', value: '1' },
-  { key: '銷售中', value: '2' },
+  { key: '銷售中', value: '1' },
+  { key: '停售中', value: '2' },
 ])
 
 // 編輯模式的驗證規則 (圖片非必填)
@@ -178,6 +191,11 @@ function resetForm() {
 function cancelEdit() {
   goTo('ProductList')
 }
+const orderstatus = ref([
+  { key: '0', name: '刪除' },
+  { key: '1', name: '上架' },
+  { key: '2', name: '下架' },
+])
 
 /**
  * 編輯模式載入商品資料
