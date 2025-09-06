@@ -90,13 +90,14 @@ const handleLogin = async () => {
     isLogin: true,
   }
 
-  const res = await api.login(loginData)
-  const token = res.result
-  userStore.login(loginData)
-  userStore.startTokenCountdown(token)
-
-  ElMessage.success('登入成功！')
-  goHome()
+   const res = await api.login(loginData)
+  if (res.code === '0000') {
+    const { token } = res.result
+    userStore.login(loginData, res.result)
+    userStore.startTokenCountdown(token)
+    ElMessage.success('登入成功！')
+    goHome()
+  }
 }
 
 const handleForgotPassword = () => {
