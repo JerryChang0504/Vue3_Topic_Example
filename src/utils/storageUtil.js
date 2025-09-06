@@ -1,5 +1,5 @@
 /**
- * LocalStorage 集中管理
+ * sessionStorage 集中管理
  *
  * @example
  * import Storage ,{ CART_KEY, USER_KEY} from '@/store/storageStore'
@@ -8,10 +8,10 @@
  */
 const Storage = {
   set(key, value) {
-    localStorage.setItem(key, JSON.stringify(value))
+    sessionStorage.setItem(key, JSON.stringify(value))
   },
   get(key, defaultValue = null) {
-    const item = localStorage.getItem(key)
+    const item = sessionStorage.getItem(key)
     try {
       return item ? JSON.parse(item) : defaultValue
     } catch {
@@ -20,11 +20,11 @@ const Storage = {
   },
   remove(...key) {
     key.forEach((item) => {
-      localStorage.removeItem(item)
+      sessionStorage.removeItem(item)
     })
   },
   clear() {
-    localStorage.clear()
+    sessionStorage.clear()
   },
 }
 
@@ -32,5 +32,6 @@ const Storage = {
 export const CART_KEY = 'shopping_cart'
 export const USER_KEY = 'username'
 export const TOKEN_KEY = 'token'
+export const OPTIONS_KEY = 'optionsCache'
 
 export default Storage
