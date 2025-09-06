@@ -36,6 +36,18 @@
         </el-select>
       </el-form-item>
 
+      <el-form-item label="商品狀態" prop="states">
+        <InputSelect
+          v-model="form.states"
+          :options="orderstatus"
+          :labelKey="'name'"
+          :valueKey="'key'"
+          :placeholder="'請選擇狀態'"
+          :disabled="false"
+          :clearable="true"
+        />
+      </el-form-item>
+
       <el-form-item label="描述">
         <el-input
           v-model="form.description"
@@ -67,6 +79,8 @@ import api from '@/service/api'
 import { ElMessage } from 'element-plus'
 import { onMounted, reactive, ref, inject } from 'vue'
 import { useRoute } from 'vue-router'
+import InputSelect from '@/components/InputSelect.vue'
+
 const productId = ref(null) // 新增一個 ref 來儲存 id
 
 const route = useRoute()
@@ -187,6 +201,11 @@ const filterOptions = (allOptions, listNamen) => {
     })
 }
 
+const orderstatus = ref([
+  { key: '0', name: '刪除' },
+  { key: '1', name: '上架' },
+  { key: '2', name: '下架' },
+])
 /**
  * 編輯模式載入商品資料
  * @description 將商品資料載入到表單中
