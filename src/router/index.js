@@ -1,5 +1,5 @@
 import CategoryPage from '@/navigation/sub/CategoryPage.vue'
-import Storage, { TOKEN_KEY } from '@/utils/storageUtil'
+import Storage, { TOKEN_KEY,USER_ROLE_KEY } from '@/utils/storageUtil'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
@@ -36,13 +36,18 @@ const routes = [
     path: '/settings/options',
     name: 'OptionsManage',
     component: () => import('@/views/settings/OptionsManage.vue'),
-    meta: { requiresAuth: true ,role:['USER','ADMIN']},
+    meta: { requiresAuth: true ,role:['ADMIN']},
   },
   {
     path: '/checkout',
     name: 'Checkout',
     component: () => import('@/views/checkout/checkout.vue'),
     meta: { requiresAuth: true },
+  },
+  {
+    path:'/accessDenied',
+    name:'AccessDenied',
+    component: () => import('@/views/users/AccessDenied.vue'),
   },
   { path: '/about', name: 'About', component: () => import('@/views/About.vue') },
   {
@@ -59,15 +64,17 @@ const router = createRouter({
 })
 // ✅ 加入全域導航守衛：權限驗證
 router.beforeEach((to, from, next) => {
-  console.log("🚀 ~ from:", from)
-  console.log("🚀 ~ to:", to)
   // 檢查是否已登入
   const isLoggedIn = !!Storage.get(TOKEN_KEY)
+  const role = Storage.get(USER_ROLE_KEY)
 
   if (to.meta.requiresAuth && !isLoggedIn) {
     return next('/login')
   }
-
+  
+  if (to.meta.requiresAuth && !to.meta.role.includes(role)) {
+    return next('/accessDenied')
+  }
   next()
 })
 export default router
