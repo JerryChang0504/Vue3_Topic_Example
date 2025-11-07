@@ -1,13 +1,13 @@
 // import './assets/main.css'
 
-import { createApp } from 'vue'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
+import { createPinia } from 'pinia'
+import { createApp } from 'vue'
 import App from './App.vue'
 import AlertBox from './components/AlertBox.vue'
 import FormatPlugin from './plugins/format' // 載入插件
 import router from './router'
-import { createPinia } from 'pinia'
 import { formatSecondsToHHMMSS } from './utils/format'
 const pinia = createPinia()
 
@@ -19,4 +19,6 @@ app.use(router)
 app.use(ElementPlus)
 app.component('AlertBox', AlertBox).mount('#app')
 
+const test = import.meta.env.VITE_TEST
+console.log('🚀 ~ test:', test)
 document.title = import.meta.env.VITE_APP_TITLE
