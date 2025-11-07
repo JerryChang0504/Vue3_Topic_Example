@@ -25,7 +25,7 @@ const routes = [
   {
     path: '/products/setting',
     name: 'ProductSetting',
-    component: () => import('@/views/products/AddProduct.vue'),
+    component: () => import('@/views/products/ProductManger.vue'),
   },
   {
     path: '/products/edit/:id',
