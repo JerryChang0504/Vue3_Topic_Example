@@ -1,7 +1,7 @@
-import { createWebHistory, createRouter } from 'vue-router'
+import CategoryPage from '@/navigation/sub/CategoryPage.vue'
 import About from '@/views/About.vue'
 import UserPost from '@/views/UserPost.vue'
-import CategoryPage from '@/navigation/sub/CategoryPage.vue'
+import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
   { path: '/', name: 'Home', component: () => import('@/views/Home.vue') },
   { path: '/login', name: 'Login', component: () => import('@/views/users/Login.vue') },
@@ -20,6 +20,11 @@ const routes = [
   {
     path: '/products/add',
     name: 'AddProduct',
+    component: () => import('@/views/products/AddProduct.vue'),
+  },
+  {
+    path: '/products/setting',
+    name: 'productSetting',
     component: () => import('@/views/products/AddProduct.vue'),
   },
   {

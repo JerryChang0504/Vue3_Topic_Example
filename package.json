@@ -8,6 +8,8 @@
     "serve": "vite --host",
     "build": "vite build",
     "preview": "vite preview",
+    "preview:sit": "vite preview --mode sit",
+    "preview:sit": "vite preview --mode uat",
     "lint": "eslint . --fix",
     "format": "prettier --write src/"
   },

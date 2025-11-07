@@ -45,10 +45,9 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
-import axios from 'axios'
-import { ElMessage } from 'element-plus'
 import api from '@/service/api'
+import { ElMessage } from 'element-plus'
+import { reactive, ref } from 'vue'
 const formRef = ref()
 
 const form = reactive({
