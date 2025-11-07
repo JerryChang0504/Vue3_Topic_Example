@@ -10,6 +10,7 @@
     "dev:prod": "vite --mode production",
     "serve": "vite --host",
     "build": "vite build",
+    "build:vit": "vite build --outDir dist-vit",
     "preview": "vite preview",
     "lint": "eslint . --fix",
     "format": "prettier --write src/"
