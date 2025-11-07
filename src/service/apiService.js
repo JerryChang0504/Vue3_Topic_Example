@@ -1,7 +1,7 @@
-import { hideLoading, showLoading } from '@/utils/loadingService'
 import axios from 'axios'
-import { ElMessage } from 'element-plus'
+import { showLoading, hideLoading } from '@/utils/loadingService'
 import { isWhiteListed } from './authWhitelist'
+import { ElMessage } from 'element-plus'
 
 const apiService = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -26,7 +26,7 @@ apiService.interceptors.request.use(
 // 回應攔截器：統一錯誤處理（可擴充）
 apiService.interceptors.response.use(
   async (response) => {
-    await new Promise((resolve) => setTimeout(resolve, 2000)) // 模擬 2 秒延遲
+    await new Promise((resolve) => setTimeout(resolve, 1000)) // 模擬 2 秒延遲
     hideLoading() // 成功後關閉 loading
     const res = response.data // 所有 .then 接收到的是 res.data
 

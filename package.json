@@ -5,17 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:sit": "vite --mode sit",
-    "dev:uat": "vite --mode uat",
-    "dev:production":"vite --mode production",
     "serve": "vite --host",
     "build": "vite build",
-    "build:sit": "vite build --mode sit --outDir dist-sit",
-    "build:uat": "vite build --mode uat --outDir dist-uat",
-    "build:prod": "vite build --mode production --outDir dist-prod",
     "preview": "vite preview",
-    "preview:sit": "vite preview --mode sit",
-    "preview:uat": "vite preview --mode uat",
     "lint": "eslint . --fix",
     "format": "prettier --write src/"
   },
