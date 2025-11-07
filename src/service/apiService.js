@@ -1,7 +1,7 @@
+import { hideLoading, showLoading } from '@/utils/loadingService'
 import axios from 'axios'
-import { showLoading, hideLoading } from '@/utils/loadingService'
-import { isWhiteListed } from './authWhitelist'
 import { ElMessage } from 'element-plus'
+import { isWhiteListed } from './authWhitelist'
 
 const apiService = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -12,6 +12,7 @@ const apiService = axios.create({
 apiService.interceptors.request.use(
   (config) => {
     showLoading() // 開啟 loading
+
     if (!isWhiteListed(config.url, config.baseURL)) {
       const token = localStorage.getItem('token')
       if (token) {
