@@ -25,8 +25,8 @@ const categories = [
     clickable: false,
     subs: [
       { name: '', label: '商品介紹', icon: Cpu },
-      { name: 'add', label: '商品新增', icon: Cpu },
-      { name: 'setting', lable: '商品管理', icon: Cpu },
+      // { name: 'add', label: '商品新增', icon: Cpu },
+      { name: 'setting', label: '商品管理', icon: Cpu },
     ],
   },
   {
