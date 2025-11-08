@@ -16,6 +16,9 @@
       <el-form-item label="價格" prop="price">
         <el-input-number v-model="form.price" :min="0" :step="100" />
       </el-form-item>
+      <el-form-item label="庫存" prop="stock">
+        <el-input-number v-model="form.stock" :min="0" :step="10" />
+      </el-form-item>
       <el-form-item label="描述">
         <el-input
           v-model="form.description"
@@ -42,11 +45,11 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
-import api from '@/service/api'
-import { useRoute } from 'vue-router'
 import { useNavigation } from '@/composables/useNavigation'
+import api from '@/service/api'
+import { ElMessage } from 'element-plus'
+import { onMounted, reactive, ref } from 'vue'
+import { useRoute } from 'vue-router'
 const productId = ref(null) // 新增一個 ref 來儲存 id
 
 const route = useRoute()
@@ -56,6 +59,8 @@ const form = reactive({
   name: '',
   category: '',
   price: 0,
+  stock: 0,
+  states: 0,
   description: '',
   imageBase64: '', // 改成 Base64 字串
 })
@@ -132,6 +137,7 @@ function resetForm() {
   form.name = ''
   form.category = ''
   form.price = null
+  form.stock = null
   form.description = ''
   form.imageBase64 = ''
   imagePreview.value = null
@@ -139,7 +145,7 @@ function resetForm() {
 }
 
 function cancelEdit() {
-  goTo('products')
+  goTo('ProductSetting')
 }
 
 // 元件掛載時，自動載入商品資料

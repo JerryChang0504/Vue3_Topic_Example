@@ -1,5 +1,5 @@
-import apiService from './apiService'
 import { API_ROUTES } from './apiRoutes'
+import apiService from './apiService'
 
 const api = {
   // 註冊
@@ -24,6 +24,7 @@ const api = {
   // 取得產品列表
   getProducts: () => apiService.get(API_ROUTES.PRODUCT_LIST),
 
+  getManageProducts:()=>apiService.get(API_ROUTES.MANAGE),
   // 取得產品詳細資料
   getProductById: (id) => apiService.get(API_ROUTES.PRODUCT_DETAIL(id)),
   // 更新產品資料

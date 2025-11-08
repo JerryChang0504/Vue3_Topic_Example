@@ -62,13 +62,31 @@
         </el-table-column>
 
         <el-table-column prop="states" label="狀態" width="100" sortable>
-          <template #default="{ row }"> {{ row.states }} </template>
+          <template #default="{ row }">
+            <div v-if="row.states === 1" class="states-available">可售賣</div>
+            <div v-else class="states-delete">已刪除</div>
+          </template>
         </el-table-column>
 
         <el-table-column label="操作" width="180" fixed="right">
           <template #default="{ row }">
             <el-button size="small" type="primary" @click="editProduct(row.id)"> 編輯 </el-button>
-            <el-button size="small" type="danger" @click="deleteProduct(row.id)"> 刪除 </el-button>
+            <el-button
+              v-if="row.states === 0"
+              size="small"
+              type="primary"
+              @click="returnDeleteProduct(row.id)"
+            >
+              還原
+            </el-button>
+            <el-button
+              v-else="row.states === 1"
+              size="small"
+              type="danger"
+              @click="deleteProduct(row.id)"
+            >
+              刪除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -98,6 +116,26 @@ const filteredProducts = computed(() => {
 
 const editProduct = (productId) => {
   goTo('EditProduct', { id: productId })
+}
+
+const returnDeleteProduct = async (productId) => {
+  try {
+    const res = await api.returnDeleteProduct(productId)
+    if (res.code === '0000') {
+      ElMessage.success('商品還原成功！')
+
+      //更新該筆資料
+      const index = products.value.findIndex((p) => p.id === res.result.id)
+      if (index !== -1) {
+        products.value.splice(index, 1, res.result)
+      }
+    }
+  } catch (err) {
+    if (err !== 'cancel') {
+      console.error('還原商品失敗:', err)
+      ElMessage.error('還原商品失敗，請稍後再試。')
+    }
+  }
 }
 
 const deleteProduct = async (productId) => {
@@ -192,6 +230,14 @@ onMounted(async () => {
   font-size: 12px;
   color: red;
   margin-top: 4px;
+}
+
+.states-available {
+  color: rgb(2, 190, 2);
+}
+
+.states-delete {
+  color: red;
 }
 
 /* 深層選擇器修改 Element Plus 元件樣式 */
