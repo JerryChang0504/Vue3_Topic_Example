@@ -24,11 +24,13 @@ const api = {
   // 取得產品列表
   getProducts: () => apiService.get(API_ROUTES.PRODUCT_LIST),
 
-  getManageProducts:()=>apiService.get(API_ROUTES.MANAGE),
+  getManageProducts: () => apiService.get(API_ROUTES.MANAGE),
   // 取得產品詳細資料
   getProductById: (id) => apiService.get(API_ROUTES.PRODUCT_DETAIL(id)),
   // 更新產品資料
   updateProduct: (id, data) => apiService.put(API_ROUTES.PRODUCT_UPDATE(id), data),
+  // 刪除產品
+  deleteProduct: (id) => apiService.put(API_ROUTES.PRODUCT_DELETE(id)),
 }
 
 export default api

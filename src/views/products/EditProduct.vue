@@ -19,6 +19,12 @@
       <el-form-item label="庫存" prop="stock">
         <el-input-number v-model="form.stock" :min="0" :step="10" />
       </el-form-item>
+      <el-form-item label="狀態" prop="states">
+        <el-select v-model="form.states" placeholder="請選擇狀態">
+          <el-option label="銷售中" value="2" />
+          <el-option label="停售" value="1" />
+        </el-select>
+      </el-form-item>
       <el-form-item label="描述">
         <el-input
           v-model="form.description"
@@ -60,7 +66,7 @@ const form = reactive({
   category: '',
   price: 0,
   stock: 0,
-  states: 0,
+  states: '',
   description: '',
   imageBase64: '', // 改成 Base64 字串
 })
@@ -138,6 +144,7 @@ function resetForm() {
   form.category = ''
   form.price = null
   form.stock = null
+  form.states = ''
   form.description = ''
   form.imageBase64 = ''
   imagePreview.value = null
