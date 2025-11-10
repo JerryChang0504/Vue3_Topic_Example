@@ -29,7 +29,7 @@ const api = {
   // 更新產品資料
   updateProduct: (id, data) => apiService.put(API_ROUTES.PRODUCT_UPDATE(id), data),
   // 取得產品管理列表
-  getManagerProducts: () => apiService.get(API_ROUTES.PRODUCT_MANAGE),
+  getManageProducts: () => apiService.get(API_ROUTES.PRODUCT_MANAGE),
 }
 
 export default api
