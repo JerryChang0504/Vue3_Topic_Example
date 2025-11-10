@@ -108,7 +108,7 @@ const deleteProduct = async (productId) => {
       type: 'warning',
     })
 
-    const res = await api.deleteProduct(productId)
+    const res = await api.deleteProducts(productId)
     if (res.code === '0000') {
       ElMessage.success('商品刪除成功！')
 
