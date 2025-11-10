@@ -19,6 +19,10 @@
         <el-input-number v-model="form.price" :min="0" :step="100" />
       </el-form-item>
 
+      <el-form-item label="庫存" prop="stock">
+        <el-input-number v-model="form.stock" :min="0" :step="1" :placeholder="'請輸入庫存'" />
+      </el-form-item>
+
       <el-form-item label="描述">
         <el-input
           v-model="form.description"
@@ -39,22 +43,23 @@
       <el-form-item>
         <el-button type="primary" @click="submitForm">新增商品</el-button>
         <el-button @click="resetForm" type="default">重設</el-button>
+        <el-button type="success" @click="back">返回</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
-import axios from 'axios'
-import { ElMessage } from 'element-plus'
 import api from '@/service/api'
+import { ElMessage } from 'element-plus'
+import { reactive, ref } from 'vue'
 const formRef = ref()
-
+const { goTo } = useNavigation()
 const form = reactive({
   name: '',
   category: '',
   price: 1000,
+  stock: 10,
   description: '',
   imageBase64: '', // 改成 Base64 字串
 })
@@ -65,6 +70,10 @@ const rules = {
   name: [{ required: true, message: '請輸入商品名稱', trigger: 'blur' }],
   category: [{ required: true, message: '請選擇分類', trigger: 'change' }],
   price: [{ required: true, message: '請輸入價格', trigger: 'blur' }],
+  stock: [
+    { required: true, message: '請輸入庫存', trigger: 'blur' },
+    { type: 'number', min: 0, message: '庫存數量不能為負數', trigger: 'blur' },
+  ],
   imageBase64: [{ required: true, message: '請上傳圖片', trigger: 'change' }],
 }
 
@@ -131,7 +140,8 @@ function removeImage() {
 function resetForm() {
   form.name = ''
   form.category = ''
-  form.price = null
+  form.price = 1000
+  form.stock = 10
   form.description = ''
   form.imageBase64 = ''
   imagePreview.value = null
