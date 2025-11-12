@@ -198,5 +198,6 @@ function submitForm() {
       ElMessage.error('更新失敗，請稍後再試')
     }
   })
+  goTo('ProductSetting')
 }
 </script>
