@@ -7,11 +7,15 @@
         <el-input v-model="form.name" placeholder="請輸入商品名稱" />
       </el-form-item>
       <el-form-item label="分類" prop="category">
-        <el-select v-model="form.category" placeholder="請選擇分類">
-          <el-option label="電子產品" value="電子產品" />
-          <el-option label="生活用品" value="生活用品" />
-          <el-option label="服飾配件" value="服飾配件" />
-        </el-select>
+        <InputSelect
+          v-model="form.category"
+          :options="[
+            { label: '電子產品', value: '電子產品' },
+            { label: '生活用品', value: '生活用品' },
+            { label: '服飾配件', value: '服飾配件' },
+          ]"
+          :placeholder="'請選擇分類'"
+        />
       </el-form-item>
       <el-form-item label="價格" prop="price">
         <el-input-number v-model="form.price" :min="0" :step="100" />
@@ -194,7 +198,7 @@ function submitForm() {
       await api.updateProduct(productId.value, form)
       ElMessage.success('商品更新成功！')
       // 更新後可以導航回商品列表
-      // router.push({ name: 'ProductList' })
+      goTo('ProductSetting')
     } catch (error) {
       ElMessage.error('更新失敗，請稍後再試')
     }
