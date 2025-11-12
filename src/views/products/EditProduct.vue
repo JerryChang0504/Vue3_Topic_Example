@@ -16,6 +16,20 @@
       <el-form-item label="價格" prop="price">
         <el-input-number v-model="form.price" :min="0" :step="100" />
       </el-form-item>
+      <el-form-item label="庫存" prop="stock">
+        <el-input-number v-model="form.stock" :min="0" :step="1" :placeholder="'請輸入庫存'" />
+      </el-form-item>
+      <el-form-item label="商品狀態" prop="states">
+        <InputSelect
+          v-model="form.states"
+          :options="orderstatus"
+          :labelKey="'name'"
+          :valueKey="'key'"
+          :placeholder="'請選擇狀態'"
+          :disabled="false"
+          :clearable="true"
+        />
+      </el-form-item>
       <el-form-item label="描述">
         <el-input
           v-model="form.description"
@@ -42,11 +56,12 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
-import api from '@/service/api'
-import { useRoute } from 'vue-router'
+import InputSelect from '@/components/InputSelect.vue'
 import { useNavigation } from '@/composables/useNavigation'
+import api from '@/service/api'
+import { ElMessage } from 'element-plus'
+import { onMounted, reactive, ref } from 'vue'
+import { useRoute } from 'vue-router'
 const productId = ref(null) // 新增一個 ref 來儲存 id
 
 const route = useRoute()
@@ -55,11 +70,19 @@ const formRef = ref()
 const form = reactive({
   name: '',
   category: '',
+  stock: 0,
   price: 0,
+  states: '2',
   description: '',
   imageBase64: '', // 改成 Base64 字串
 })
 const imagePreview = ref(null)
+
+const orderstatus = [
+  { name: '刪除', key: '0' },
+  { name: '停售', key: '1' },
+  { name: '銷售中', key: '2' },
+]
 
 // 編輯模式的驗證規則 (圖片非必填)
 const rules = {
@@ -131,7 +154,9 @@ function removeImage() {
 function resetForm() {
   form.name = ''
   form.category = ''
+  form.stock = 0
   form.price = null
+  form.states = '2'
   form.description = ''
   form.imageBase64 = ''
   imagePreview.value = null
@@ -139,7 +164,7 @@ function resetForm() {
 }
 
 function cancelEdit() {
-  goTo('products')
+  goTo('ProductSetting')
 }
 
 // 元件掛載時，自動載入商品資料
