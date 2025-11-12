@@ -18,9 +18,7 @@
       <el-form-item label="價格" prop="price">
         <el-input-number v-model="form.price" :min="0" :step="100" />
       </el-form-item>
-      <el-form-item label="庫存" prop="stock">
-        <el-input-number v-model="form.stock" :min="0" :step="1" />
-      </el-form-item>
+
       <el-form-item label="描述">
         <el-input
           v-model="form.description"
@@ -41,24 +39,22 @@
       <el-form-item>
         <el-button type="primary" @click="submitForm">新增商品</el-button>
         <el-button @click="resetForm" type="default">重設</el-button>
-        <el-button type="success" @click="back">返回</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script setup>
-import { useNavigation } from '@/composables/useNavigation'
-import api from '@/service/api'
+import { ref, reactive } from 'vue'
+import axios from 'axios'
 import { ElMessage } from 'element-plus'
-import { reactive, ref } from 'vue'
+import api from '@/service/api'
 const formRef = ref()
-const goto = useNavigation()
+
 const form = reactive({
   name: '',
   category: '',
   price: 1000,
-  stock: 10,
   description: '',
   imageBase64: '', // 改成 Base64 字串
 })
@@ -156,9 +152,5 @@ function submitForm() {
     }
     document.querySelector('input[type="file"]').value = ''
   })
-}
-
-function back() {
-  goTo('ProductSetting')
 }
 </script>
