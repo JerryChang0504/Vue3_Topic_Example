@@ -7,23 +7,32 @@
         <el-input v-model="form.name" placeholder="請輸入商品名稱" />
       </el-form-item>
       <el-form-item label="分類" prop="category">
-        <el-select v-model="form.category" placeholder="請選擇分類">
-          <el-option label="電子產品" value="電子產品" />
-          <el-option label="生活用品" value="生活用品" />
-          <el-option label="服飾配件" value="服飾配件" />
-        </el-select>
+        <InputSelect
+          v-model="form.category"
+          :options="[
+            { label: '電子產品', value: '電子產品' },
+            { label: '生活用品', value: '生活用品' },
+            { label: '服飾配件', value: '服飾配件' },
+          ]"
+          :placeholder="'請選擇分類'"
+        />
       </el-form-item>
       <el-form-item label="價格" prop="price">
         <el-input-number v-model="form.price" :min="0" :step="100" />
       </el-form-item>
       <el-form-item label="庫存" prop="stock">
-        <el-input-number v-model="form.stock" :min="0" :step="10" />
+        <el-input-number v-model="form.stock" :min="0" :step="1" :placeholder="'請輸入庫存'" />
       </el-form-item>
       <el-form-item label="狀態" prop="states">
-        <el-select v-model="form.states" placeholder="請選擇狀態">
-          <el-option label="銷售中" value="2" />
-          <el-option label="停售" value="1" />
-        </el-select>
+        <InputSelect
+          v-model="form.states"
+          :options="orderstatus"
+          :labelKey="'name'"
+          :valueKey="'key'"
+          :placeholder="'請選擇狀態'"
+          :disabled="false"
+          :clearable="true"
+        />
       </el-form-item>
       <el-form-item label="描述">
         <el-input
@@ -48,9 +57,11 @@
       </el-form-item>
     </el-form>
   </div>
+  {{ form }}
 </template>
 
 <script setup>
+import InputSelect from '@/components/InputSelect.vue'
 import { useNavigation } from '@/composables/useNavigation'
 import api from '@/service/api'
 import { ElMessage } from 'element-plus'
@@ -66,11 +77,17 @@ const form = reactive({
   category: '',
   price: 0,
   stock: 0,
-  states: '',
+  states: '2',
   description: '',
   imageBase64: '', // 改成 Base64 字串
 })
 const imagePreview = ref(null)
+
+const orderstatus = [
+  { name: '刪除', key: '0' },
+  { name: '停售', key: '1' },
+  { name: '銷售中', key: '2' },
+]
 
 // 編輯模式的驗證規則 (圖片非必填)
 const rules = {
@@ -143,8 +160,8 @@ function resetForm() {
   form.name = ''
   form.category = ''
   form.price = null
-  form.stock = null
-  form.states = ''
+  form.stock = 0
+  form.states = '2'
   form.description = ''
   form.imageBase64 = ''
   imagePreview.value = null
@@ -165,6 +182,14 @@ onMounted(async () => {
         const product = res.result
         // 載入資料到表單
         Object.assign(form, product)
+        if (form.states === '刪除') {
+          form.states = '0'
+        } else if (form.states === '停售') {
+          form.states = '1'
+        } else {
+          form.states = '2'
+        }
+
         imagePreview.value = product.imageBase64
       }
     } catch (error) {

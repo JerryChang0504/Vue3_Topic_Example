@@ -62,7 +62,11 @@
         </el-table-column>
 
         <el-table-column prop="states" label="狀態" width="100" sortable>
-          <template #default="{ row }">{{ row.states }}</template>
+          <template #default="{ row }">
+            <span :class="row.states === '刪除' ? 'states-delete' : 'states-available'">
+              {{ row.states }}
+            </span>
+          </template>
         </el-table-column>
 
         <el-table-column label="操作" width="180" fixed="right">
