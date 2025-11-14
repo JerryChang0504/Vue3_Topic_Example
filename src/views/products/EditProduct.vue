@@ -57,7 +57,6 @@
       </el-form-item>
     </el-form>
   </div>
-  {{ form }}
 </template>
 
 <script setup>

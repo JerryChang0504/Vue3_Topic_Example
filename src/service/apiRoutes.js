@@ -11,4 +11,6 @@ export const API_ROUTES = {
   PRODUCT_DETAIL: (id) => `/api/products/edit/${id}`,
   PRODUCT_UPDATE: (id) => `/api/updateProducts/${id}`,
   PRODUCT_DELETE: (id) => `/api/deleteProduct/${id}`,
+  Options_ADD: '/options/add',
+  Options_LIST: '/options/list',
 }
