@@ -26,10 +26,10 @@
 </template>
 
 <script setup>
+import MenuItem from '@/Navigation/MenuItem.vue'
 import { DArrowLeft, DArrowRight } from '@element-plus/icons-vue' // ⬅️ 必要的 Icon
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import MenuItem from './MenuItem.vue'
 
 const props = defineProps({
   categories: {

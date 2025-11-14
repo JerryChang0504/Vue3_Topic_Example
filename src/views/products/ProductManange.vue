@@ -128,7 +128,7 @@ const deleteProduct = async (productId) => {
 
 onMounted(async () => {
   try {
-    const res = await api.getManageProducts()
+    const res = await api.optionList()
     if (res.code === '0000') {
       products.value = res.result
       categories.value = [...new Set(products.value.map((p) => p.category))]
