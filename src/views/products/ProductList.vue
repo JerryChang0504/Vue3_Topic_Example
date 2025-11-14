@@ -98,6 +98,9 @@
 
     <CartDrawer v-model:drawerVisible="drawerVisible" @removeItem="removeItem" />
   </div>
+  <el-button type="primary" size="small" class="add-to-cart-button" @click="AddOption">
+    新增選項
+  </el-button>
 </template>
 
 <script setup>
@@ -184,6 +187,16 @@ onMounted(async () => {
     isLoading.value = false
   }
 })
+const AddOption = () => {
+  api.optionsAdd({
+    listName: 'ProductClass',
+    name: '電子產品',
+    value: '001',
+    sortOrder: 1,
+    isActive: true,
+    description: '電子產品類別',
+  })
+}
 </script>
 
 <style scoped>

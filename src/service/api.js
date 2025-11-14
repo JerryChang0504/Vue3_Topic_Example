@@ -32,6 +32,10 @@ const api = {
   getManageProducts: () => apiService.get(API_ROUTES.PRODUCT_MANAGE),
   // 刪除商品(註記刪除)
   deleteProducts: () => apiService.put(API_ROUTES.PRODUCT_DELETE),
+  //選項列表
+  optionsList: () => apiService.get(API_ROUTES.OPTION_LIST),
+  //新增選項
+  optionsAdd: (data) => apiService.post(API_ROUTES.OPTION_ADD),
 }
 
 export default api
