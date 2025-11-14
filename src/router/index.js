@@ -1,4 +1,4 @@
-import CategoryPage from '@/navigation/sub/CategoryPage.vue'
+import CategoryPage from '@/Navigation/sub/CategoryPage.vue'
 import About from '@/views/About.vue'
 import UserPost from '@/views/UserPost.vue'
 import { createRouter, createWebHistory } from 'vue-router'
@@ -32,6 +32,12 @@ const routes = [
     name: 'EditProduct',
     component: () => import('@/views/products/EditProduct.vue'),
   },
+  {
+    path: '/settings/options',
+    name: 'SettingsOptions',
+    component: () => import('@/views/settings/OptionsManage.vue'),
+  },
+
   { path: '/about', name: 'About', component: About },
   { path: '/users/:username/posts/:postId', component: UserPost },
   {

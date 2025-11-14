@@ -2,7 +2,7 @@
 import CategorySidebar from './navigation/CategorySidebar.vue'
 import TopBar from './navigation/TopBar.vue'
 import Breadcrumb from './navigation/Breadcrumb.vue'
-import { Monitor, Cpu, Coffee, Suitcase, Flag } from '@element-plus/icons-vue'
+import { Monitor, Cpu, Coffee, Suitcase, Flag, Odometer } from '@element-plus/icons-vue'
 import api from './service/api'
 
 import { onMounted } from 'vue'
@@ -28,6 +28,14 @@ const categories = [
       { name: 'setting', label: '商品管理', icon: Cpu },
     ],
   },
+  {
+    name: 'settings',
+    label: '管理相關',
+    icon: Odometer,
+    clickable: false,
+    subs: [{ name: 'options', label: '選項管理', icon: Cpu }],
+  },
+
   {
     name: 'life',
     label: '生活類',

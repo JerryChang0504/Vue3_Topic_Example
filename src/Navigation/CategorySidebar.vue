@@ -27,8 +27,9 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import MenuItem from './MenuItem.vue'
+// import MenuItem from './MenuItem.vue'
 import { useRoute } from 'vue-router'
+import MenuItem from '@/Navigation/MenuItem.vue'
 import { DArrowLeft, DArrowRight } from '@element-plus/icons-vue' // ⬅️ 必要的 Icon
 
 const props = defineProps({
