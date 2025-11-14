@@ -1,7 +1,7 @@
+import { hideLoading, showLoading } from '@/utils/loadingService'
 import axios from 'axios'
-import { showLoading, hideLoading } from '@/utils/loadingService'
-import { isWhiteListed } from './authWhitelist'
 import { ElMessage } from 'element-plus'
+import { isWhiteListed } from './authWhitelist'
 
 const apiService = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -32,7 +32,7 @@ apiService.interceptors.response.use(
 
     // ❗檢查 code 是否為成功代碼
     if (res.code && res.code !== '0000') {
-      ElMessage.error(res.msg || '發生錯誤')
+      ElMessage.error(res.result || res.msg || '發生錯誤')
       return Promise.reject(res) // 中止回傳
     }
 

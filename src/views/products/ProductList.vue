@@ -188,9 +188,9 @@ onMounted(async () => {
 
 const AddOption = () => {
   api.optionsAdd({
-    listName: 'ProductClass',
-    name: '電子產品',
-    value: '001',
+    // listName: 'ProductClass',
+    // name: '電子產品',
+    // value: '001',
     sortOrder: 1,
     isActive: true,
     description: '電子產品類別',
