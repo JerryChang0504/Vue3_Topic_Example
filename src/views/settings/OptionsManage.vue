@@ -22,13 +22,13 @@
       </div>
     </div>
 
-    <!-- <OptionsForm
+    <OptionsForm
       v-if="showAddOptionForm"
       :option="optionForm"
       :mode="mode"
       @submit="handlesubmit()"
       @close="handleClose()"
-    /> -->
+    />
 
     <el-table :data="filteredProducts" style="width: 100%">
       <el-table-column prop="id" label="ID" />
@@ -59,7 +59,7 @@ import api from '@/service/api'
 import { Close, Open } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { computed, onMounted, reactive, ref } from 'vue'
-// import OptionsForm from './OptionsForm.vue'
+import OptionsForm from './OptionsForm.vue'
 const { goTo } = useNavigation()
 
 const tableData = ref([])
@@ -129,15 +129,9 @@ const deleteOption = async (optionId) => {
 
 // 載入選項
 const loadOptions = async () => {
-  try {
-    const res = await api.optionsList()
-    if (res.code === '0000') {
-      tableData.value = res.result
-      categories.value = [...new Set(tableData.value.map((p) => p.listName))]
-    }
-  } catch (err) {
-    ElMessage.error('載入商品失敗')
-  }
+  const res = await api.optionsList()
+  tableData.value = res.result
+  categories.value = [...new Set(tableData.value.map((p) => p.listName))]
 }
 
 onMounted(async () => {
