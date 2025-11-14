@@ -94,6 +94,9 @@
           />
         </div>
       </div>
+      <el-button type="primary" size="small" class="add-to-cart-button" @click="AddOption">
+        新增選項
+      </el-button>
     </el-dialog>
 
     <CartDrawer v-model:drawerVisible="drawerVisible" @removeItem="removeItem" />
@@ -101,12 +104,12 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import api from '@/service/api'
-import { useNavigation } from '@/composables/useNavigation'
-import { ElMessage } from 'element-plus'
 import CartDrawer from '@/components/CartDrawer.vue'
+import { useNavigation } from '@/composables/useNavigation'
+import api from '@/service/api'
 import { useCartStore } from '@/store/carStore'
+import { ElMessage } from 'element-plus'
+import { computed, onMounted, ref } from 'vue'
 
 const { goTo } = useNavigation()
 const cartStore = useCartStore()
@@ -184,6 +187,17 @@ onMounted(async () => {
     isLoading.value = false
   }
 })
+
+const AddOption = () => {
+  api.optionsAdd({
+    listName: 'ProductClass',
+    name: '電子產品',
+    value: '001',
+    sortOrder: 1,
+    isActive: true,
+    description: '電子產品類別',
+  })
+}
 </script>
 
 <style scoped>
