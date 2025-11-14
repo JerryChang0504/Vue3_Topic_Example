@@ -1,15 +1,14 @@
 <script setup>
-import { Coffee, Cpu, Flag, Monitor, Suitcase } from '@element-plus/icons-vue'
-import Breadcrumb from './navigation/Breadcrumb.vue'
-import CategorySidebar from './navigation/CategorySidebar.vue'
-import TopBar from './navigation/TopBar.vue'
+import Breadcrumb from '@/Navigation/Breadcrumb.vue'
+import CategorySidebar from '@/Navigation/CategorySidebar.vue'
+import TopBar from '@/Navigation/TopBar.vue'
+import { Coffee, Cpu, Flag, Monitor, Odometer, Suitcase } from '@element-plus/icons-vue'
 import api from './service/api'
 
 import { onMounted } from 'vue'
 
 const getusers = async () => {
   const res = await api.user()
-  console.log('🚀 ~ res:', res?.result)
   return res
 }
 
@@ -27,6 +26,13 @@ const categories = [
       { name: '', label: '商品介紹', icon: Cpu },
       { name: 'setting', label: '商品管理', icon: Cpu },
     ],
+  },
+  {
+    name: 'settings',
+    label: '管理相關',
+    icon: Odometer,
+    clickable: false,
+    subs: [{ name: 'options', label: '選項管理', icon: Cpu }],
   },
   {
     name: 'life',
