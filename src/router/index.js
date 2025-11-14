@@ -40,6 +40,11 @@ const routes = [
     component: CategoryPage,
     props: true,
   },
+  {
+    path: '/settings/options',
+    name: 'SettingsOption',
+    component: () => import('@/views/settings/OptionManage.vue'),
+  },
 ]
 
 const router = createRouter({
