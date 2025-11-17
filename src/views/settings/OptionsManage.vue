@@ -88,7 +88,7 @@ const addOption = () => {
 }
 
 const editOption = (option) => {
-  Object.assign(optionForm, { ...option, name: option.key })
+  Object.assign(optionForm, { ...option })
   showAddOptionForm.value = true
   mode.value = 'edit'
   selectedCategory.value = option.listName
@@ -106,24 +106,16 @@ const handleClose = () => {
 }
 
 const deleteOption = async (optionId) => {
-  try {
-    await ElMessageBox.confirm('確定要刪除這選項嗎？此操作無法復原。', '警告', {
-      confirmButtonText: '確定',
-      cancelButtonText: '取消',
-      type: 'warning',
-    })
+  await ElMessageBox.confirm('確定要刪除這選項嗎？此操作無法復原。', '警告', {
+    confirmButtonText: '確定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
 
-    const res = await api.deleteOption(optionId)
-    if (res.code === '0000') {
-      ElMessage.success('選項刪除成功！')
-
-      loadOptions()
-    }
-  } catch (err) {
-    if (err !== 'cancel') {
-      console.error('刪除商品失敗:', err)
-      ElMessage.error('刪除商品失敗，請稍後再試。')
-    }
+  const res = await api.optionsDisable(optionId)
+  if (res.code === '0000') {
+    ElMessage.success('關閉選項成功！')
+    loadOptions()
   }
 }
 
