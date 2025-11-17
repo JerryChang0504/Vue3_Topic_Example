@@ -121,7 +121,7 @@ const submitForm = async (formEl) => {
         })
         emits('submit')
       } else {
-        await api.updateOption(optionForm.id, optionForm)
+        await api.optionsUpdate(optionForm.id, optionForm)
         ElMessage({
           message: '選項更新成功！',
           type: 'success',
