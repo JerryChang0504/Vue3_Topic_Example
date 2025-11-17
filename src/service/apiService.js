@@ -12,7 +12,6 @@ const apiService = axios.create({
 apiService.interceptors.request.use(
   (config) => {
     showLoading() // 開啟 loading
-
     if (!isWhiteListed(config.url, config.baseURL)) {
       const token = localStorage.getItem('token')
       if (token) {
@@ -33,7 +32,7 @@ apiService.interceptors.response.use(
 
     // ❗檢查 code 是否為成功代碼
     if (res.code && res.code !== '0000') {
-      ElMessage.error(res.msg || '發生錯誤')
+      ElMessage.error(res.result || res.msg || '發生錯誤')
       return Promise.reject(res) // 中止回傳
     }
 

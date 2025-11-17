@@ -7,14 +7,32 @@
         <el-input v-model="form.name" placeholder="請輸入商品名稱" />
       </el-form-item>
       <el-form-item label="分類" prop="category">
-        <el-select v-model="form.category" placeholder="請選擇分類">
-          <el-option label="電子產品" value="電子產品" />
-          <el-option label="生活用品" value="生活用品" />
-          <el-option label="服飾配件" value="服飾配件" />
-        </el-select>
+        <InputSelect
+          v-model="form.category"
+          :options="[
+            { label: '電子產品', value: '電子產品' },
+            { label: '生活用品', value: '生活用品' },
+            { label: '服飾配件', value: '服飾配件' },
+          ]"
+          :placeholder="'請選擇分類'"
+        />
       </el-form-item>
       <el-form-item label="價格" prop="price">
         <el-input-number v-model="form.price" :min="0" :step="100" />
+      </el-form-item>
+      <el-form-item label="庫存" prop="stock">
+        <el-input-number v-model="form.stock" :min="0" :step="1" :placeholder="'請輸入庫存'" />
+      </el-form-item>
+      <el-form-item label="商品狀態" prop="states">
+        <InputSelect
+          v-model="form.states"
+          :options="orderstatus"
+          :labelKey="'name'"
+          :valueKey="'key'"
+          :placeholder="'請選擇狀態'"
+          :disabled="false"
+          :clearable="true"
+        />
       </el-form-item>
       <el-form-item label="描述">
         <el-input
@@ -42,11 +60,12 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
-import api from '@/service/api'
-import { useRoute } from 'vue-router'
+import InputSelect from '@/components/InputSelect.vue'
 import { useNavigation } from '@/composables/useNavigation'
+import api from '@/service/api'
+import { ElMessage } from 'element-plus'
+import { onMounted, reactive, ref } from 'vue'
+import { useRoute } from 'vue-router'
 const productId = ref(null) // 新增一個 ref 來儲存 id
 
 const route = useRoute()
@@ -55,11 +74,19 @@ const formRef = ref()
 const form = reactive({
   name: '',
   category: '',
+  stock: 0,
   price: 0,
+  states: '2',
   description: '',
   imageBase64: '', // 改成 Base64 字串
 })
 const imagePreview = ref(null)
+
+const orderstatus = [
+  { name: '刪除', key: '0' },
+  { name: '停售', key: '1' },
+  { name: '銷售中', key: '2' },
+]
 
 // 編輯模式的驗證規則 (圖片非必填)
 const rules = {
@@ -131,7 +158,9 @@ function removeImage() {
 function resetForm() {
   form.name = ''
   form.category = ''
+  form.stock = 0
   form.price = null
+  form.states = '2'
   form.description = ''
   form.imageBase64 = ''
   imagePreview.value = null
@@ -139,7 +168,7 @@ function resetForm() {
 }
 
 function cancelEdit() {
-  goTo('products')
+  goTo('ProductSetting')
 }
 
 // 元件掛載時，自動載入商品資料
@@ -169,7 +198,7 @@ function submitForm() {
       await api.updateProduct(productId.value, form)
       ElMessage.success('商品更新成功！')
       // 更新後可以導航回商品列表
-      // router.push({ name: 'ProductList' })
+      goTo('ProductSetting')
     } catch (error) {
       ElMessage.error('更新失敗，請稍後再試')
     }
