@@ -13,4 +13,7 @@ export const API_ROUTES = {
   PRODUCT_DELETE: (id) => `/api/deleteProduct/${id}`,
   Options_ADD: '/options/add',
   Options_LIST: '/options/list',
+  Options_UPDATE: (id) => `/options/edit/${id}`,
+  OPTIONS_DISABLE: (id) => `/options/disable/${id}`,
+  OPTIONS_BY_LISTNAME: () => `/options/getByListName`,
 }

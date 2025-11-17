@@ -8,11 +8,11 @@
       </el-form-item>
 
       <el-form-item label="分類" prop="category">
-        <el-select v-model="form.category" placeholder="請選擇分類">
-          <el-option label="電子產品" value="電子產品" />
-          <el-option label="生活用品" value="生活用品" />
-          <el-option label="服飾配件" value="服飾配件" />
-        </el-select>
+        <InputSelect
+          v-model="form.category"
+          :options="categoryOptions"
+          :placeholder="'請選擇分類'"
+        />
       </el-form-item>
 
       <el-form-item label="價格" prop="price">
@@ -50,10 +50,11 @@
 </template>
 
 <script setup>
+import InputSelect from '@/components/InputSelect.vue'
 import { useNavigation } from '@/composables/useNavigation'
 import api from '@/service/api'
 import { ElMessage } from 'element-plus'
-import { reactive, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 const formRef = ref()
 
 const { goto } = useNavigation()
@@ -65,6 +66,8 @@ const form = reactive({
   description: '',
   imageBase64: '', // 改成 Base64 字串
 })
+
+const categoryOptions = ref([])
 
 const imagePreview = ref(null)
 
@@ -164,4 +167,14 @@ function submitForm() {
 function back() {
   goTo('ProductSetting')
 }
+
+onMounted(async () => {
+  const res = await api.getOptionsByListName('ProductClass')
+  categoryOptions.value = res.result.map((o) => {
+    return {
+      value: o.value,
+      label: o.name,
+    }
+  })
+})
 </script>
