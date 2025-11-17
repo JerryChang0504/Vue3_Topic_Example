@@ -36,6 +36,8 @@ const api = {
   optionsList: () => apiService.get(API_ROUTES.OPTIONS_LIST),
   //新增選項
   optionsAdd: (data) => apiService.post(API_ROUTES.OPTIONS_ADD, data),
+  //更新選項
+  optionsUpdate: (id, data) => apiService.put(API_ROUTES.OPTIONS_UPDATE(id), data),
 }
 
 export default api
