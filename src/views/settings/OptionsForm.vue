@@ -114,7 +114,7 @@ const submitForm = async (formEl) => {
 
     try {
       if (props.mode === 'add') {
-        await api.optionsAdd(optionForm)
+        await api.addOption(optionForm)
         ElMessage({
           message: '選項新增成功！',
           type: 'success',
