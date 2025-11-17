@@ -39,7 +39,7 @@
       <el-table-column prop="isActive" label="啟用狀態">
         <template #default="{ row }">
           <el-icon v-if="row.isActive" style="color: var(--el-color-success)"><Open /></el-icon>
-          <el-icon v-else style="color: var(--el-color-danger)"><Close /></el-icon>
+          <el-icon v-else style="color: var(--el-color-danger)"><CircleClose /></el-icon>
         </template>
       </el-table-column>
       <el-table-column prop="description" label="描述" />
@@ -56,7 +56,7 @@
 <script setup>
 import { useNavigation } from '@/composables/useNavigation'
 import api from '@/service/api'
-import { Close, Open } from '@element-plus/icons-vue'
+import { CircleClose, Open } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { computed, onMounted, reactive, ref } from 'vue'
 import OptionsForm from './OptionsForm.vue'
