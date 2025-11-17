@@ -43,6 +43,11 @@ const api = {
   addOption: (data) => apiService.post(API_ROUTES.OPTIONS_ADD, data),
   //更新選項
   optionsUpdate: (id, data) => apiService.put(API_ROUTES.OPTIONS_UPDATE(id), data),
+  //關閉選項
+  optionsDisable: (id) => apiService.put(API_ROUTES.OPTIONS_DISABLE(id)),
+  // 取得選項列表
+  getOptionsByListName: (listName) =>
+    apiService.get(API_ROUTES.OPTIONS_BY_LISTNAME(), { params: { listName: listName } }),
 }
 
 export default api
