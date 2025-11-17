@@ -50,6 +50,6 @@ export function getOptions(options, listName) {
       return o.listName === listName
     })
     .map((o) => {
-      return { label: o.key, value: o.value }
+      return { label: o.name, value: o.value }
     })
 }
