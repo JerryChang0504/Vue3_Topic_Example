@@ -9,9 +9,13 @@ import AlertBox from './components/AlertBox.vue'
 import FormatPlugin from './plugins/format' // 載入插件
 import router from './router'
 import { formatSecondsToHHMMSS } from './utils/format'
+import { getAndCacheOptions } from './utils/optionService'
 const pinia = createPinia()
 
 const app = createApp(App)
+const res = await getAndCacheOptions()
+console.log('🚀 ~ res:', res)
+
 app.config.globalProperties.$formatSecondsToHHMMSS = formatSecondsToHHMMSS
 app.use(FormatPlugin) // 註冊插件
 app.use(pinia)
