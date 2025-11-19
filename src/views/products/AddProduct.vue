@@ -53,8 +53,9 @@
 import InputSelect from '@/components/InputSelect.vue'
 import { useNavigation } from '@/composables/useNavigation'
 import api from '@/service/api'
+import { getOptions } from '@/utils/optionService'
 import { ElMessage } from 'element-plus'
-import { onMounted, reactive, ref } from 'vue'
+import { inject, onMounted, reactive, ref } from 'vue'
 const formRef = ref()
 
 const { goTo } = useNavigation()
@@ -174,12 +175,14 @@ function back() {
 }
 
 onMounted(async () => {
-  const res = await api.getOptionsByListName('ProductClass')
-  categoryOptions.value = res.result.map((o) => {
-    return {
-      value: o.value,
-      label: o.name,
-    }
-  })
+  const allOptions = inject('allOptions')
+  categoryOptions.value = getOptions(allOptions, 'ProductClass')
+  // const res = await api.getOptionsByListName('ProductClass')
+  // categoryOptions.value = res.result.map((o) => {
+  //   return {
+  //     value: o.value,
+  //     label: o.name,
+  //   }
+  // })
 })
 </script>
