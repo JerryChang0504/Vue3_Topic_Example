@@ -14,7 +14,7 @@ const pinia = createPinia()
 
 const app = createApp(App)
 const res = await getAndCacheOptions()
-console.log('🚀 ~ res:', res)
+app.provide('allOptions', res)
 
 app.config.globalProperties.$formatSecondsToHHMMSS = formatSecondsToHHMMSS
 app.use(FormatPlugin) // 註冊插件
