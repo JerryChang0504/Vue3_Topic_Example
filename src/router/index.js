@@ -22,11 +22,7 @@ const routes = [
     name: 'AddProduct',
     component: () => import('@/views/products/AddProduct.vue'),
   },
-  {
-    path: '/products/setting',
-    name: 'productSetting',
-    component: () => import('@/views/products/ProductManange.vue'),
-  },
+
   {
     path: '/products/edit/:id',
     name: 'EditProduct',
@@ -36,6 +32,11 @@ const routes = [
     path: '/settings/options',
     name: 'SettingsOptions',
     component: () => import('@/views/settings/OptionsManage.vue'),
+  },
+  {
+    path: '/settings/setting',
+    name: 'productSetting',
+    component: () => import('@/views/products/ProductManange.vue'),
   },
   { path: '/about', name: 'About', component: About },
   { path: '/users/:username/posts/:postId', component: UserPost },

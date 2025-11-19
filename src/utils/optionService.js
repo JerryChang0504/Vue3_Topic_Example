@@ -20,7 +20,7 @@ export async function getAndCacheOptions() {
   // 緩存無效，發送 API 請求
   try {
     console.log('Fetching fresh options data from API...')
-    const response = await api.optionsList()
+    const response = await api.optionList()
     const newData = response.result
 
     // 將新資料儲存到緩存
