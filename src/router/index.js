@@ -23,7 +23,7 @@ const routes = [
     component: () => import('@/views/products/AddProduct.vue'),
   },
   {
-    path: '/products/setting',
+    path: '/settings/setting',
     name: 'ProductSetting',
     component: () => import('@/views/products/ProductManger.vue'),
   },

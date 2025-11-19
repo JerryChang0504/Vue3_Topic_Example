@@ -38,11 +38,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
+import { useNavigation } from '@/composables/useNavigation'
 import api from '@/service/api'
 import { useUserStore } from '@/store/userStore'
-import { useNavigation } from '@/composables/useNavigation'
+import { ElMessage } from 'element-plus'
+import { onMounted, ref } from 'vue'
 
 const { goTo, goHome } = useNavigation()
 
@@ -91,7 +91,7 @@ const handleLogin = async () => {
 
   const res = await api.login(loginData)
   const token = res.result
-  userStore.login(loginData)
+  userStore.login(token, res.result)
   userStore.startTokenCountdown(token)
 
   ElMessage.success('登入成功！')
