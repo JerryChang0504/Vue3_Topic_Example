@@ -1,60 +1,19 @@
 <script setup>
-import { Coffee, Cpu, Flag, Monitor, Odometer, Suitcase } from '@element-plus/icons-vue'
-import Breadcrumb from './Navigation/Breadcrumb.vue'
-import CategorySidebar from './Navigation/CategorySidebar.vue'
-import TopBar from './Navigation/TopBar.vue'
-import api from './service/api'
+import Breadcrumb from '@/Navigation/Breadcrumb.vue'
+import CategorySidebar from '@/Navigation/CategorySidebar.vue'
+import TopBar from '@/Navigation/TopBar.vue'
+import { computed } from 'vue'
+import { getNavMenu } from './Navigation/getNavMenu'
+import { useUserStore } from './store/userStore'
 
-import { onMounted } from 'vue'
-
-const getusers = async () => {
-  const res = await api.user()
-  console.log('🚀 ~ res:', res?.result)
-  return res
-}
-
-onMounted(() => {
-  getusers()
+const userStore = useUserStore()
+const userRole = computed(() => {
+  return userStore.userRole
 })
-
-const categories = [
-  {
-    name: 'products',
-    label: '商品相關',
-    icon: Monitor,
-    clickable: false,
-    subs: [
-      { name: '', label: '商品介紹', icon: Cpu },
-      { name: 'setting', label: '商品管理', icon: Cpu },
-    ],
-  },
-  {
-    name: 'settings',
-    label: '管理相關',
-    icon: Odometer,
-    clickable: false,
-    subs: [{ name: 'options', label: '選項管理', icon: Cpu }],
-  },
-  {
-    name: 'life',
-    label: '生活類',
-    icon: Coffee,
-    clickable: false,
-    subs: [
-      { name: 'food', label: '美食', icon: Coffee },
-      {
-        name: 'travel',
-        label: '旅遊',
-        icon: Suitcase,
-        clickable: false,
-        subs: [
-          { name: 'usa', label: '美國', icon: Flag },
-          { name: 'canada', label: '加拿大', icon: Flag },
-        ],
-      },
-    ],
-  },
-]
+console.log('🚀 ~ userRole:', userRole)
+const navMenu = computed(() => {
+  return getNavMenu(userRole.value)
+})
 </script>
 
 <template>
@@ -64,10 +23,10 @@ const categories = [
 
   <main>
     <div class="layout">
-      <CategorySidebar :categories="categories" />
+      <CategorySidebar :categories="navMenu" />
 
       <div class="content">
-        <Breadcrumb :categories="categories" />
+        <Breadcrumb :categories="navMenu" />
         <router-view />
       </div>
     </div>
